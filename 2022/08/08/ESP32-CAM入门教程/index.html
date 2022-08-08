@@ -13,7 +13,7 @@
 
 
 
-<title>Hello World | Arno&#39;blogs</title>
+<title>ESP32-CAM入门教程 | Arno&#39;blogs</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Hello World</h1>
+            <h1 class="post-title">ESP32-CAM入门教程</h1>
             
                 <div class="post-meta">
                     
@@ -205,28 +205,79 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">八月 7, 2022&nbsp;&nbsp;20:04:42</a>
+                        Date: <a href="#">八月 8, 2022&nbsp;&nbsp;11:45:53</a>
                         </span>
                     
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%8D%95%E7%89%87%E6%9C%BA/">单片机</a>
+                            
+                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+            <h1 id="ESP32-CAM入门教程"><a href="#ESP32-CAM入门教程" class="headerlink" title="ESP32-CAM入门教程"></a>ESP32-CAM入门教程</h1><h3 id="1-材料"><a href="#1-材料" class="headerlink" title="1.材料"></a>1.材料</h3><ul>
+<li><p>Arduino</p>
+</li>
+<li><p>ESP32-CAM</p>
+</li>
+<li><p>下载模块（接上USB就能用，很方便，如果没有买就只有资金用USB-TTL了）</p>
+<p>如下图</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\TTL.jpg" alt="TTL"></p>
+</li>
+</ul>
+<p>两个合在一起如下图</p>
+<img src="C:\Users\17991\myBlog\source\_posts\ESP32-CAM入门教程\cam.jpg" alt="cam" style="zoom: 50%;" />
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<h3 id="2-Arduino-ESP32开发环境搭建"><a href="#2-Arduino-ESP32开发环境搭建" class="headerlink" title="2.Arduino+ESP32开发环境搭建"></a>2.Arduino+ESP32开发环境搭建</h3><ul>
+<li><p>官网下载Arduino <a target="_blank" rel="noopener" href="https://www.arduino.cc/en/software">https://www.arduino.cc/en/software</a> (建议不要下载beta 版，可能会有问题）</p>
+<p>如果官网太慢可以在这里下载<a target="_blank" rel="noopener" href="https://www.arduino.cn/">Arduino中文社区 - Powered by Discuz!</a>）</p>
+</li>
+<li><p>安装ESP32开发包，文件-&gt; 首选项-&gt;附加开发板管理器 输入 <a target="_blank" rel="noopener" href="https://dl.espressif.com/dl/package_esp32_index.json">https://dl.espressif.com/dl/package_esp32_index.json</a></p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\esp配置.png" alt="本地路径"></p>
+</li>
+<li><p>然后重启Arduino，工具-&gt; 开发板-&gt;开发板管理器，搜索ESP32下载（如下图）</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\as.png" alt="as"></p>
+</li>
+<li><p>到这里环境就配置好了</p>
+</li>
+</ul>
+<h3 id="3-烧录程序"><a href="#3-烧录程序" class="headerlink" title="3.烧录程序"></a>3.烧录程序</h3><h5 id="1-准备"><a href="#1-准备" class="headerlink" title="1.准备"></a>1.准备</h5><p>1.将esp32-cam与电脑连接，如果连接成功会如下图所示</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\VA.png"></p>
+<p>如果没有连接上可能是USB线没有数据传输功能</p>
+<p>2.工具-&gt;开发板 选择AI Thinker ESP32-CAM的开发板</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\asd.png" alt="asd"></p>
+<p>3.将你的设备的端口打上勾</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\tch.png" alt="tch"></p>
+<h5 id="2-验证"><a href="#2-验证" class="headerlink" title="2.验证"></a>2.验证</h5><p>1.打开文件官方示例：ChipID，获取开发板芯片ID号。</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\chip.png" alt="chip"></p>
+<p>2.点击烧录按钮</p>
+<p><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\shao.png"></p>
+<p>3.烧录成功后，点击右上角串口监视器，可以看到ESP32芯片的ID号。证明环境搭建成功！</p>
+<p>![](C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\success (2).png)</p>
+<h5 id="3-使用esp32-cam示例"><a href="#3-使用esp32-cam示例" class="headerlink" title="3.使用esp32-cam示例"></a>3.使用esp32-cam示例</h5><ol>
+<li><p>在Arduino中打开<strong>文件–&gt;示例–&gt; ESP32 –&gt;Camera–&gt;CameraWebServer</strong><img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\camera.png" alt="camera"></p>
+</li>
+<li><p>（1）将你所需要使用的模型取消注释，不需要的全部注释（这里我选择的是   <strong>CAMERA_MODEL_AI_THINKER</strong>）<br>（2）在<strong>ssid</strong>和<strong>password</strong>中设置你所要连接的WiFi名称和密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Select camera model</span><br><span class="line">//#define CAMERA_MODEL_WROVER_KIT // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_ESP_EYE // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_PSRAM // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_V2_PSRAM // M5Camera version B Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_WIDE // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_ESP32CAM // No PSRAM</span><br><span class="line">#define CAMERA_MODEL_AI_THINKER // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_TTGO_T_JOURNAL // No PSRAM</span><br><span class="line"></span><br><span class="line">#include &quot;camera_pins.h&quot;</span><br><span class="line"></span><br><span class="line">const char* ssid = &quot;*********&quot;;</span><br><span class="line">const char* password = &quot;*********&quot;;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>设置好以后点击烧录</p>
+</li>
+<li><p>烧录成功后，点击右上角的串口监听器<img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\chuan.png" alt="chuan"></p>
+</li>
+<li><p>以<strong>波特率115200</strong>打开串行监视器并按ESP32-CAM板上复位键。会弹出如下窗口。（我的上面有一些文字乱码，但是不影响使用）<img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\123.png" alt="123"></p>
+</li>
+<li><p>我们将监视器中的显示IP地址复制到浏览器打开就可以通过局域网来使用ESP32-CAM了（也就是我画横线的地方）</p>
+<p>点击<strong>Start Stream</strong>就可以看到ESP32-CAM实时传过来的画面。<img src="C:\Users\17991\myBlog\source_posts\ESP32-CAM入门教程\shot.jpg" alt="shot"></p>
+</li>
+</ol>
 
         </div>
 
@@ -241,7 +292,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2022/08/07/hello-world/">http://example.com/2022/08/07/hello-world/</a></span>
+                        <span><a href="http://example.com/2022/08/08/ESP32-CAM%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">http://example.com/2022/08/08/ESP32-CAM%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</a></span>
                     </p>
                 
                 
@@ -264,6 +315,10 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
+                    
+                        <a href="/tags/%E5%8D%95%E7%89%87%E6%9C%BA/"># 单片机</a>
+                    
+                        
                 </span>
             </div>
             <div>
@@ -274,8 +329,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/08/08/ESP32-CAM%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">ESP32-CAM入门教程</a>
             
+            <a class="next" rel="next" href="/2022/08/07/hello-world/">Hello World</a>
             
         </section>
 
