@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Arno Dorian">
+
+
+
+
+
+<title>Hexo/hexo-theme-Chic问题总结 | Arno&#39;blogs</title>
+
+
+
+    <link rel="icon" href="/Cube.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./iconfont.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Arno&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Arno&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Hexo/hexo-theme-Chic问题总结</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Arno Dorian</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 9, 2022&nbsp;&nbsp;16:31:47</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Hexo-hexo-theme-Chic问题总结"><a href="#Hexo-hexo-theme-Chic问题总结" class="headerlink" title="Hexo/hexo-theme-Chic问题总结"></a>Hexo/hexo-theme-Chic问题总结</h1><h3 id="一、设置中文"><a href="#一、设置中文" class="headerlink" title="一、设置中文"></a>一、设置中文</h3><ol>
+<li><p>先检查 <code>Chic/language</code> 中有没有 <strong>zh-CN.yml</strong></p>
+</li>
+<li><p>打开站点配置文件：站点<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%A0%B9%E7%9B%AE%E5%BD%95&spm=1001.2101.3001.7020">根目录</a>/_config.yml</p>
+<p><img src="langu.png" alt="langu"></p>
+<p>如上图中,将language改为zh-CN</p>
+</li>
+</ol>
+<h3 id="二、解决中文乱码问题"><a href="#二、解决中文乱码问题" class="headerlink" title="二、解决中文乱码问题"></a>二、解决中文乱码问题</h3><ol>
+<li>将<code>_config.yml</code>以<strong>UTF-8</strong>编码保存</li>
+<li>如果博客中文也乱码，也将.md文件以<strong>UTF-8</strong>编码保存</li>
+<li>然后重新启动即可：<br>执行：<code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</code></li>
+</ol>
+<h3 id="三、博客插入图片不能显示"><a href="#三、博客插入图片不能显示" class="headerlink" title="三、博客插入图片不能显示"></a>三、博客插入图片不能显示</h3><ol>
+<li><p>先安装插件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</span><br></pre></td></tr></table></figure></li>
+<li><p>修改_config.yml，将post_asset_folder:改为true</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">post_asset_folder: true</span><br></pre></td></tr></table></figure></li>
+<li><p>然后重新启动即可：<br>执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure></li>
+<li><p>更改图片路径，改为 ! <a href="xxx.png"></a> 【图片格式随意】</p>
+<p>例：<img src="123.png" alt="123"></p>
+<p>更改前</p>
+<p><img src="321.png" alt="321"></p>
+<p>更改后</p>
+</li>
+<li><p>最后执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="四、主页新增Link图标"><a href="#四、主页新增Link图标" class="headerlink" title="四、主页新增Link图标"></a>四、主页新增Link图标</h3><ol>
+<li><p>在<a target="_blank" rel="noopener" href="https://www.iconfont.cn/home/index?spm=a313x.7781069.1998910419.2">阿里图标库</a>中下载压缩包并解压，步骤如下：</p>
+<ol>
+<li><p>点击购物车</p>
+<p><img src="shop-166003674359911.png" alt="shop"></p>
+</li>
+<li><p>点击Add To Project</p>
+<p><img src="project-166003677956313.png" alt="project"></p>
+</li>
+<li><p>选择Symbol，然后Download Code</p>
+<p><img src="down-166003685856617.png" alt="down"></p>
+</li>
+<li><p>将下载的文件改名为 iconfont2(或其他名字，下文均使用 iconfont2),然后将 其放在<code>Chic/source/fonts</code></p>
+</li>
+<li><p>然后在<code>source/css/style.styl</code>中引入主css (iconfont css已经包含其他外部资源)<br>就像已经存在的那一行,如下</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// <span class="attribute">icon</span></span><br><span class="line"><span class="keyword">@import</span> <span class="string">&quot;../fonts/iconfont/iconfont.css&quot;</span>    //原来的</span><br><span class="line">@import <span class="string">&quot;../fonts/iconfont2/iconfont.css&quot;</span>   //现在的</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>Chic/source/fonts/iconfont2/iconfont.css</code>查看图标的类名（或者改为自己想要的类名），例如：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.icon-bilibili</span><span class="selector-pseudo">:before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;\e504&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类名为bilibili</p>
+</li>
+<li><p>最后添加到_config.yml中，如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># config<span class="selector-class">.yml</span>文件</span><br><span class="line">links:</span><br><span class="line">  Blog: /archives</span><br><span class="line">  bilibili: url #新增的图标</span><br></pre></td></tr></table></figure></li>
+<li><p>执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>我在执行完以上步骤后，有图标的空间，也能点击链接，但是图标并没有显示出来，我是这样解决的</strong></p>
+<ul>
+<li>将<code>iconfont2</code>中的.woff和.woff2文件复制到了 <code>Chic\source\css</code>中</li>
+</ul>
+</li>
+</ol>
+<h3 id="四、博文"><a href="#四、博文" class="headerlink" title="四、博文"></a>四、博文</h3><h5 id="1、博文配置项"><a href="#1、博文配置项" class="headerlink" title="1、博文配置项"></a>1、博文配置项</h5><table>
+<thead>
+<tr>
+<th align="center">配置项</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">title</td>
+<td align="center">网页文章标题</td>
+</tr>
+<tr>
+<td align="center">date</td>
+<td align="center">文章创建</td>
+</tr>
+<tr>
+<td align="center">comments</td>
+<td align="center">文章评论功能是否启动</td>
+</tr>
+<tr>
+<td align="center">tags</td>
+<td align="center">文章标签</td>
+</tr>
+<tr>
+<td align="center">categories</td>
+<td align="center">文章分类</td>
+</tr>
+<tr>
+<td align="center">keywords</td>
+<td align="center">文章关键字</td>
+</tr>
+</tbody></table>
+<p>以上配置项的使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------</span><br><span class="line">title: ESP32-CAM入门教程</span><br><span class="line">date: 2022-08-08 11:45:53</span><br><span class="line">tags:</span><br><span class="line">- 单片机             //一级分类</span><br><span class="line">- esp32             //二级分类</span><br><span class="line">categories:</span><br><span class="line">- 单片机             //一级分类</span><br><span class="line">- esp32             //二级分类</span><br><span class="line">keywords:</span><br><span class="line">- 单片机             //一级分类</span><br><span class="line">- esp32             //二级分类</span><br><span class="line">---------------------------------------</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2、上传博文"><a href="#2、上传博文" class="headerlink" title="2、上传博文"></a>2、上传博文</h5><p>​    在发博文前，可以将Typora这样设置 <code>文件-&gt;偏好设置-&gt;图像</code></p>
+<p><img src="MMK.png" alt="MMK"></p>
+<ol>
+<li><p>先输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd myBlog</span><br></pre></td></tr></table></figure>
+
+<p>再</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new &#x27;name&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>name为新建文章名字，文章路径在 <code>myBlog\source\posts</code></p>
+</li>
+<li><p>然后执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean </span><br><span class="line">$ hexo g </span><br><span class="line">$ hexo s</span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：文章发布或更改，一定要 <code>hexo clean</code></strong></p>
+<ul>
+<li> <em>s:  server</em></li>
+<li> <em>g:  generate</em></li>
+<li> <em>d:  deploy</em></li>
+</ul>
+</li>
+</ol>
+<h3 id="五、添加Tag、Category页面"><a href="#五、添加Tag、Category页面" class="headerlink" title="五、添加Tag、Category页面"></a>五、添加Tag、Category页面</h3><ul>
+<li><p>Hexo初始化没有<code>tag</code>、<code>category</code>页面，需要自行添加，执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tag</span><br><span class="line">hexo new page category</span><br></pre></td></tr></table></figure></li>
+<li><p>以Tag为例：</p>
+<ul>
+<li><p>进入<code>source\tag\index.md</code></p>
+</li>
+<li><pre><code>---
+title: Tag     //注意大小写
+layout: tag    //新增
+---
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- `category` 页面同理，`layout` 字段键值为 `category`</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  **注：大小写与`_config.yml`**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+nav:
+Posts: /archives
+Categories: /category
+Tags: /tag
+About: /about
+</code></pre>
+</li>
+</ul>
+<p><strong>中一致</strong></p>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Arno Dorian</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/09/Hexo-hexo-theme-Chic%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">http://example.com/2022/08/09/Hexo-hexo-theme-Chic%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AC%94%E8%AE%B0/"># 笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/10/Goouu-ESP32/">Goouu-ESP32</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/08/test/">test</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Arno Dorian | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

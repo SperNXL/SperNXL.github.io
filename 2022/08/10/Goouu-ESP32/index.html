@@ -13,7 +13,7 @@
 
 
 
-<title>ESP32-CAM入门教程 | Arno&#39;blogs</title>
+<title>Goouu-ESP32 | Arno&#39;blogs</title>
 
 
 
@@ -197,7 +197,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">ESP32-CAM入门教程</h1>
+            <h1 class="post-title">Goouu-ESP32</h1>
             
                 <div class="post-meta">
                     
@@ -206,7 +206,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">八月 8, 2022&nbsp;&nbsp;11:45:53</a>
+                        Date: <a href="#">八月 10, 2022&nbsp;&nbsp;0:17:31</a>
                         </span>
                     
                     
@@ -222,58 +222,106 @@
         </header>
 
         <div class="post-content">
-            <h1 id="ESP32-CAM入门教程"><a href="#ESP32-CAM入门教程" class="headerlink" title="ESP32-CAM入门教程"></a>ESP32-CAM入门教程</h1><h3 id="1-材料"><a href="#1-材料" class="headerlink" title="1.材料"></a>1.材料</h3><ul>
-<li><p>Arduino</p>
-</li>
-<li><p>ESP32-CAM</p>
-</li>
-<li><p>下载模块（接上USB就能用，很方便，如果没有买就只有资金用USB-TTL了）</p>
-<p>如下图</p>
-<p><img src="TTL.jpg" alt="TTL"></p>
-</li>
+            <ol>
+<li><h2 id="一-准备"><a href="#一-准备" class="headerlink" title="一.准备"></a>一.准备</h2><h3 id="1-材料"><a href="#1-材料" class="headerlink" title="1.材料"></a>1.材料</h3><ul>
+<li>Goouu-ESP32</li>
+<li>SPI TFT彩屏（8引脚）</li>
 </ul>
-<p>两个合在一起如下图</p>
-<p><img src="cam.jpg"></p>
-<h3 id="2-Arduino-ESP32开发环境搭建"><a href="#2-Arduino-ESP32开发环境搭建" class="headerlink" title="2.Arduino+ESP32开发环境搭建"></a>2.Arduino+ESP32开发环境搭建</h3><ul>
-<li><p>官网下载Arduino <a target="_blank" rel="noopener" href="https://www.arduino.cc/en/software">https://www.arduino.cc/en/software</a> (建议不要下载beta 版，可能会有问题）</p>
+<h3 id="2-ESP32硬件连接方式"><a href="#2-ESP32硬件连接方式" class="headerlink" title="2.ESP32硬件连接方式"></a>2.ESP32硬件连接方式</h3><ul>
+<li>ESP32和TFT彩屏连接图</li>
+</ul>
+<img src="接线图-166006214551113.png" style="zoom:50%;" />
+
+<table>
+<thead>
+<tr>
+<th align="center"><strong>ESP32</strong></th>
+<th align="center">TFT</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GND</td>
+<td align="center">GND</td>
+</tr>
+<tr>
+<td align="center">3V3</td>
+<td align="center">VCC</td>
+</tr>
+<tr>
+<td align="center">G18</td>
+<td align="center">SCL</td>
+</tr>
+<tr>
+<td align="center">G23</td>
+<td align="center">SDA</td>
+</tr>
+<tr>
+<td align="center">G26</td>
+<td align="center">RES</td>
+</tr>
+<tr>
+<td align="center">G25</td>
+<td align="center">DC</td>
+</tr>
+<tr>
+<td align="center">G27</td>
+<td align="center">CS</td>
+</tr>
+</tbody></table>
+<h3 id="3-Arduino-ESP32开发环境搭建"><a href="#3-Arduino-ESP32开发环境搭建" class="headerlink" title="3.Arduino+ESP32开发环境搭建"></a>3.Arduino+ESP32开发环境搭建</h3><ul>
+<li><p>官网下载Arduino <a target="_blank" rel="noopener" href="https://www.arduino.cc/en/software">https://www.arduino.cc/en/software</a> (建议不要下载2.0 beta 版，可能会有问题，</p>
 <p>如果官网太慢可以在这里下载<a target="_blank" rel="noopener" href="https://www.arduino.cn/">Arduino中文社区 - Powered by Discuz!</a>）</p>
 </li>
 <li><p>安装ESP32开发包，文件-&gt; 首选项-&gt;附加开发板管理器 输入 <a target="_blank" rel="noopener" href="https://dl.espressif.com/dl/package_esp32_index.json">https://dl.espressif.com/dl/package_esp32_index.json</a></p>
-<p><img src="esp%E9%85%8D%E7%BD%AE.png" alt="本地路径"></p>
-</li>
-<li><p>然后重启Arduino，工具-&gt; 开发板-&gt;开发板管理器，搜索ESP32下载（如下图）</p>
-<p><img src="as.png" alt="as"></p>
-</li>
-<li><p>到这里环境就配置好了</p>
 </li>
 </ul>
-<h3 id="3-烧录程序"><a href="#3-烧录程序" class="headerlink" title="3.烧录程序"></a>3.烧录程序</h3><h5 id="1-准备"><a href="#1-准备" class="headerlink" title="1.准备"></a>1.准备</h5><p>1.将esp32-cam与电脑连接，如果连接成功会如下图所示</p>
-<p><img src="VA.png"></p>
-<p>如果没有连接上可能是USB线没有数据传输功能</p>
-<p>2.工具-&gt;开发板 选择AI Thinker ESP32-CAM的开发板</p>
-<p><img src="asd.png" alt="asd"></p>
-<p>3.将你的设备的端口打上勾</p>
-<p><img src="tch.png" alt="tch"></p>
-<h5 id="2-验证"><a href="#2-验证" class="headerlink" title="2.验证"></a>2.验证</h5><p>1.打开文件官方示例：ChipID，获取开发板芯片ID号。</p>
-<p><img src="chip.png" alt="chip"></p>
-<p>2.点击烧录按钮</p>
-<p><img src="shao.png"></p>
-<p>3.烧录成功后，点击右上角串口监视器，可以看到ESP32芯片的ID号。证明环境搭建成功！</p>
-<p><img src="success.png" alt="success"></p>
-<h5 id="3-使用esp32-cam示例"><a href="#3-使用esp32-cam示例" class="headerlink" title="3.使用esp32-cam示例"></a>3.使用esp32-cam示例</h5><ol>
-<li><p>在Arduino中打开<strong>文件–&gt;示例–&gt; ESP32 –&gt;Camera–&gt;CameraWebServer</strong><img src="camera.png" alt="camera"></p>
-</li>
-<li><p>（1）将你所需要使用的模型取消注释，不需要的全部注释（这里我选择的是   <strong>CAMERA_MODEL_AI_THINKER</strong>）<br>（2）在<strong>ssid</strong>和<strong>password</strong>中设置你所要连接的WiFi名称和密码。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Select camera model</span><br><span class="line">//#define CAMERA_MODEL_WROVER_KIT // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_ESP_EYE // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_PSRAM // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_V2_PSRAM // M5Camera version B Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_WIDE // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_M5STACK_ESP32CAM // No PSRAM</span><br><span class="line">#define CAMERA_MODEL_AI_THINKER // Has PSRAM</span><br><span class="line">//#define CAMERA_MODEL_TTGO_T_JOURNAL // No PSRAM</span><br><span class="line"></span><br><span class="line">#include &quot;camera_pins.h&quot;</span><br><span class="line"></span><br><span class="line">const char* ssid = &quot;*********&quot;;</span><br><span class="line">const char* password = &quot;*********&quot;;</span><br></pre></td></tr></table></figure>
+<img src="pei.png" alt="pei" style="zoom: 80%;" />
 
-<p>设置好以后点击烧录</p>
+<p>然后重启Arduino，工具-&gt; 开发板-&gt;开发板管理器，搜索ESP32下载</p>
+<h3 id="4-TFT-eSPI库的安装和使用"><a href="#4-TFT-eSPI库的安装和使用" class="headerlink" title="4.TFT_eSPI库的安装和使用"></a>4.TFT_eSPI库的安装和使用</h3><p>在 Arduino 中打开库管理器，搜索 <code>TFT_eSPI</code>，然后点击安装即可。</p>
+<img src="TFT-166006214551414.png" alt="TFT" style="zoom:80%;" />
+
+<p>转到 Arduino 库文件安装目录，打开 TFT_eSPI 库所在位置，以 Windows 系统为例，该库的安装目录一般为：</p>
+<p>C:\Users&lt;用户名&gt;\Documents\Arduino\libraries\TFT_eSPI</p>
+<p>如果是你使用的是绿色版 Arduino 的话，该库的安装目录一般为：</p>
+<p>&lt;Arduino安装目录&gt;\Arduino\portable\sketchbook\libraries\TFT_eSPI</p>
+<p>然后在库文件目录中打开 User_Setup.h 这个文件，根据自己的屏幕类型与驱动芯片类型进行相应的设置，这里以我使用的 2.4 寸 <strong>ST7735</strong> TFT LCD 彩屏为例。</p>
+<img src="h-166006214551515.png" alt="h" style="zoom: 80%;" />
+
+<ul>
+<li><p>右键使用记事本或者其他编译软件打开</p>
+<p><img src="ST7732-166006214551516.png" alt="ST7732"></p>
+<p>选择驱动ST7735，其他用不到的注释掉。</p>
 </li>
-<li><p>烧录成功后，点击右上角的串口监听器<img src="chuan.png" alt="chuan"></p>
+<li><p>接着设置屏幕显示的颜色和屏幕的尺寸大小，我们设置屏幕的宽度为128×128，屏幕颜色有RGB和 BGR两种类型。TFT默认的是BGR类型，我们图片一般是RGB。<img src="st-166006214551517.png" alt="st"></p>
 </li>
-<li><p>以<strong>波特率115200</strong>打开串行监视器并按ESP32-CAM板上复位键。会弹出如下窗口。（我的上面有一些文字乱码，但是不影响使用）<img src="123.png" alt="123"></p>
+<li><p>如果屏幕显示有偏移的话，可以取消这句注释<img src="UY-166006214551518.png" alt="UY"></p>
 </li>
-<li><p>我们将监视器中的显示IP地址复制到浏览器打开就可以通过局域网来使用ESP32-CAM了（也就是我画横线的地方）</p>
-<p>点击<strong>Start Stream</strong>就可以看到ESP32-CAM实时传过来的画面。<img src="shot.jpg" alt="shot"></p>
+<li><p>最后设置引脚（设置完引脚，后面的都可以不用动了）<img src="yin-166006214551519.png" alt="yin"></p>
+</li>
+</ul>
+<h2 id="二-显示"><a href="#二-显示" class="headerlink" title="二.显示"></a>二.显示</h2><h3 id="1-显示文字"><a href="#1-显示文字" class="headerlink" title="1.显示文字"></a>1.显示文字</h3><ol>
+<li><p>将esp32与笔记本连接，如果连接成功会如下图所示<img src="connect-166006214551520.png" alt="connect" style="zoom: 80%;" /></p>
+<p>如果没有连接上可能是USB线没有数据传输功能</p>
+</li>
+<li><p>工具-&gt;开发板选择 ESP32的开发板，并且设置下载速度为921600，频率为80MHZ。<img src="cpm-166006214551522.png" alt="cpm"></p>
+</li>
+<li><p>将你设备的端口打上勾<img src="ske-166006214551521.png" alt="ske"></p>
+</li>
+<li><p>输入示例程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SPI.h&gt;</span> <span class="comment">//导入库</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;TFT_eSPI.h&gt;</span></span></span><br><span class="line">  </span><br><span class="line">TFT_eSPI tft = TFT_eSPI();</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">setup</span><span class="params">()</span> &#123;</span><br><span class="line">  tft.init();</span><br><span class="line">  tft.fillScreen(TFT_BLACK);                <span class="comment">//屏幕颜色</span></span><br><span class="line">  tft.setCursor(<span class="number">10</span>,<span class="number">10</span>,<span class="number">1</span>);                   <span class="comment">//设置起始坐标(10, 10)，2 号字体</span></span><br><span class="line">  tft.setTextColor(TFT_WHITE);              <span class="comment">//设置字体颜色</span></span><br><span class="line">  tft.setTextSize(<span class="number">1</span>);                       <span class="comment">//设置文字的大小 (1~7)</span></span><br><span class="line">  tft.println(<span class="string">&quot;Hello World&quot;</span>);               <span class="comment">//打印文字</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">loop</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// put your main code here, to run repeatedly:</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>点击烧写，在下方看到烧写完成100%。注意下方提示Connect 时，<strong>此时开发板需要手动按下 boot按钮才可烧写</strong></p>
+<img src="hello-166006214551524.png" alt="hello" style="zoom: 67%;" />
+
+<p>烧录成功</p>
+<img src="abc-166006214551523.png" alt="abc" style="zoom: 80%;" />
+
+<p>效果如下</p>
+<img src="QQ - 副本.png" alt="QQ - 副本" style="zoom: 50%;" /></li>
+</ol>
 </li>
 </ol>
 
@@ -290,7 +338,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2022/08/08/ESP32-CAM%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">http://example.com/2022/08/08/ESP32-CAM%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</a></span>
+                        <span><a href="http://example.com/2022/08/10/Goouu-ESP32/">http://example.com/2022/08/10/Goouu-ESP32/</a></span>
                     </p>
                 
                 
@@ -327,10 +375,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/08/08/test/">test</a>
             
-            
-            <a class="next" rel="next" href="/2022/08/07/hello-world/">Hello World</a>
+            <a class="next" rel="next" href="/2022/08/09/Hexo-hexo-theme-Chic%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">Hexo/hexo-theme-Chic问题总结</a>
             
         </section>
 
