@@ -13,7 +13,7 @@
 
 
 
-<title>Goouu-ESP32 | Arno&#39;blogs</title>
+<title>接口中的方法必须全部实现吗？ | Arno&#39;blogs</title>
 
 
 
@@ -197,7 +197,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">Goouu-ESP32</h1>
+            <h1 class="post-title">接口中的方法必须全部实现吗？</h1>
             
                 <div class="post-meta">
                     
@@ -206,14 +206,16 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">八月 10, 2022&nbsp;&nbsp;0:17:31</a>
+                        Date: <a href="#">八月 18, 2022&nbsp;&nbsp;10:33:14</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
+                            
+                                <a href="/categories/%E7%AC%94%E8%AE%B0/JAVA/">JAVA</a>
                             
                         </span>
                     
@@ -222,108 +224,8 @@
         </header>
 
         <div class="post-content">
-            <ol>
-<li><h2 id="一-准备"><a href="#一-准备" class="headerlink" title="一.准备"></a>一.准备</h2><h3 id="1-材料"><a href="#1-材料" class="headerlink" title="1.材料"></a>1.材料</h3><ul>
-<li>Goouu-ESP32</li>
-<li>SPI TFT彩屏（8引脚）</li>
-</ul>
-<h3 id="2-ESP32硬件连接方式"><a href="#2-ESP32硬件连接方式" class="headerlink" title="2.ESP32硬件连接方式"></a>2.ESP32硬件连接方式</h3><ul>
-<li>ESP32和TFT彩屏连接图</li>
-</ul>
-<img src="接线图-166006214551113.png" style="zoom:50%;" />
+            <h3 id="接口中的方法必须全部实现吗？"><a href="#接口中的方法必须全部实现吗？" class="headerlink" title="接口中的方法必须全部实现吗？"></a>接口中的方法必须全部实现吗？</h3><h4 id="答：不用全部实现"><a href="#答：不用全部实现" class="headerlink" title="答：不用全部实现"></a>答：不用全部实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">test</span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * jdk1.7只能有抽象方法，子类是抽象类时可以实现也可以不实现</span></span><br><span class="line"><span class="comment">     *若不是抽象类，必须实现</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">method</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * jdk1.8中可以有静态方法和默认方法</span></span><br><span class="line"><span class="comment">     * 静态方法子类不能实现</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method1</span><span class="params">()</span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 默认方法，子类可以实现也可以不实现</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">method2</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 普通方法必须实现</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">method4</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th align="center"><strong>ESP32</strong></th>
-<th align="center">TFT</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">GND</td>
-<td align="center">GND</td>
-</tr>
-<tr>
-<td align="center">3V3</td>
-<td align="center">VCC</td>
-</tr>
-<tr>
-<td align="center">G18</td>
-<td align="center">SCL</td>
-</tr>
-<tr>
-<td align="center">G23</td>
-<td align="center">SDA</td>
-</tr>
-<tr>
-<td align="center">G26</td>
-<td align="center">RES</td>
-</tr>
-<tr>
-<td align="center">G25</td>
-<td align="center">DC</td>
-</tr>
-<tr>
-<td align="center">G27</td>
-<td align="center">CS</td>
-</tr>
-</tbody></table>
-<h3 id="3-Arduino-ESP32开发环境搭建"><a href="#3-Arduino-ESP32开发环境搭建" class="headerlink" title="3.Arduino+ESP32开发环境搭建"></a>3.Arduino+ESP32开发环境搭建</h3><ul>
-<li><p>官网下载Arduino <a target="_blank" rel="noopener" href="https://www.arduino.cc/en/software">https://www.arduino.cc/en/software</a> (建议不要下载2.0 beta 版，可能会有问题，</p>
-<p>如果官网太慢可以在这里下载<a target="_blank" rel="noopener" href="https://www.arduino.cn/">Arduino中文社区 - Powered by Discuz!</a>）</p>
-</li>
-<li><p>安装ESP32开发包，文件-&gt; 首选项-&gt;附加开发板管理器 输入 <a target="_blank" rel="noopener" href="https://dl.espressif.com/dl/package_esp32_index.json">https://dl.espressif.com/dl/package_esp32_index.json</a></p>
-</li>
-</ul>
-<img src="pei.png" alt="pei" style="zoom: 80%;" />
-
-<p>然后重启Arduino，工具-&gt; 开发板-&gt;开发板管理器，搜索ESP32下载</p>
-<h3 id="4-TFT-eSPI库的安装和使用"><a href="#4-TFT-eSPI库的安装和使用" class="headerlink" title="4.TFT_eSPI库的安装和使用"></a>4.TFT_eSPI库的安装和使用</h3><p>在 Arduino 中打开库管理器，搜索 <code>TFT_eSPI</code>，然后点击安装即可。</p>
-<img src="TFT-166006214551414.png" alt="TFT" style="zoom:80%;" />
-
-<p>转到 Arduino 库文件安装目录，打开 TFT_eSPI 库所在位置，以 Windows 系统为例，该库的安装目录一般为：</p>
-<p>C:\Users&lt;用户名&gt;\Documents\Arduino\libraries\TFT_eSPI</p>
-<p>如果是你使用的是绿色版 Arduino 的话，该库的安装目录一般为：</p>
-<p>&lt;Arduino安装目录&gt;\Arduino\portable\sketchbook\libraries\TFT_eSPI</p>
-<p>然后在库文件目录中打开 User_Setup.h 这个文件，根据自己的屏幕类型与驱动芯片类型进行相应的设置，这里以我使用的 2.4 寸 <strong>ST7735</strong> TFT LCD 彩屏为例。</p>
-<img src="h-166006214551515.png" alt="h" style="zoom: 80%;" />
-
-<ul>
-<li><p>右键使用记事本或者其他编译软件打开</p>
-<p><img src="ST7732-166006214551516.png" alt="ST7732"></p>
-<p>选择驱动ST7735，其他用不到的注释掉。</p>
-</li>
-<li><p>接着设置屏幕显示的颜色和屏幕的尺寸大小，我们设置屏幕的宽度为128×128，屏幕颜色有RGB和 BGR两种类型。TFT默认的是BGR类型，我们图片一般是RGB。<img src="st-166006214551517.png" alt="st"></p>
-</li>
-<li><p>如果屏幕显示有偏移的话，可以取消这句注释<img src="UY-166006214551518.png" alt="UY"></p>
-</li>
-<li><p>最后设置引脚（设置完引脚，后面的都可以不用动了）<img src="yin-166006214551519.png" alt="yin"></p>
-</li>
-</ul>
-<h2 id="二-显示"><a href="#二-显示" class="headerlink" title="二.显示"></a>二.显示</h2><h3 id="1-显示文字"><a href="#1-显示文字" class="headerlink" title="1.显示文字"></a>1.显示文字</h3><ol>
-<li><p>将esp32与笔记本连接，如果连接成功会如下图所示<img src="connect-166006214551520.png" alt="connect" style="zoom: 80%;" /></p>
-<p>如果没有连接上可能是USB线没有数据传输功能</p>
-</li>
-<li><p>工具-&gt;开发板选择 ESP32的开发板，并且设置下载速度为921600，频率为80MHZ。<img src="cpm-166006214551522.png" alt="cpm"></p>
-</li>
-<li><p>将你设备的端口打上勾<img src="ske-166006214551521.png" alt="ske"></p>
-</li>
-<li><p>输入示例程序</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SPI.h&gt;</span> <span class="comment">//导入库</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;TFT_eSPI.h&gt;</span></span></span><br><span class="line">  </span><br><span class="line">TFT_eSPI tft = TFT_eSPI();</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">setup</span><span class="params">()</span> &#123;</span><br><span class="line">  tft.init();</span><br><span class="line">  tft.fillScreen(TFT_BLACK);                <span class="comment">//屏幕颜色</span></span><br><span class="line">  tft.setCursor(<span class="number">10</span>,<span class="number">10</span>,<span class="number">1</span>);                   <span class="comment">//设置起始坐标(10, 10)，2 号字体</span></span><br><span class="line">  tft.setTextColor(TFT_WHITE);              <span class="comment">//设置字体颜色</span></span><br><span class="line">  tft.setTextSize(<span class="number">1</span>);                       <span class="comment">//设置文字的大小 (1~7)</span></span><br><span class="line">  tft.println(<span class="string">&quot;Hello World&quot;</span>);               <span class="comment">//打印文字</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">loop</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// put your main code here, to run repeatedly:</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>点击烧写，在下方看到烧写完成100%。注意下方提示Connect 时，<strong>此时开发板需要手动按下 boot按钮才可烧写</strong></p>
-<img src="hello-166006214551524.png" alt="hello" style="zoom: 67%;" />
-
-<p>烧录成功</p>
-<img src="abc-166006214551523.png" alt="abc" style="zoom: 80%;" />
-
-<p>效果如下</p>
-<img src="QQ - 副本.png" alt="QQ - 副本" style="zoom: 50%;" /></li>
-</ol>
-</li>
-</ol>
 
         </div>
 
@@ -338,7 +240,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2022/08/10/Goouu-ESP32/">http://example.com/2022/08/10/Goouu-ESP32/</a></span>
+                        <span><a href="http://example.com/2022/08/18/%E6%8E%A5%E5%8F%A3%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%E5%BF%85%E9%A1%BB%E5%85%A8%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%90%97%EF%BC%9F/">http://example.com/2022/08/18/%E6%8E%A5%E5%8F%A3%E4%B8%AD%E7%9A%84%E6%96%B9%E6%B3%95%E5%BF%85%E9%A1%BB%E5%85%A8%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%90%97%EF%BC%9F/</a></span>
                     </p>
                 
                 
@@ -362,7 +264,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/"># 嵌入式</a>
+                        <a href="/tags/%E7%AC%94%E8%AE%B0/"># 笔记</a>
+                    
+                        <a href="/tags/JAVA/"># JAVA</a>
                     
                         
                 </span>
@@ -420,10 +324,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/08/14/ESP32-TFT%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87%E5%92%8C%E5%8A%A8%E7%94%BB/">ESP32 & TFT显示图片和动画</a>
             
-            
-            <a class="next" rel="next" href="/2022/08/09/Hexo-hexo-theme-Chic%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">Hexo/hexo-theme-Chic问题总结</a>
+            <a class="next" rel="next" href="/2022/08/18/Comparable%E5%92%8CComparator%E7%9A%84%E5%8C%BA%E5%88%AB/">Comparable和Comparator的区别</a>
             
         </section>
 
