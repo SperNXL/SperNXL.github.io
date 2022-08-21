@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Arno Dorian">
+
+
+
+
+
+<title>基于UDP协议的聊天系统的实现（含GUI） | Arno&#39;blogs</title>
+
+
+
+    <link rel="icon" href="/Cube.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./iconfont.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Arno&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Arno&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">基于UDP协议的聊天系统的实现（含GUI）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Arno Dorian</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 21, 2021&nbsp;&nbsp;16:44:44</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JAVA/">JAVA</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>这是一篇我的学习记录，这学期加入了JAVA 的学习，所以自己把教科书看了一下，然后尝试地写了一个UDP协议的聊天系统，并且含GUI。因为对JAVA和网络的了解还不够深，所以代码还有许多地方需要完善。</p>
+<h2 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h2><p>下面展示一些 <code>Client类</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">    发送端</span></span><br><span class="line"><span class="comment">    ---------------------*/</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Client</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Thread</span>&#123;</span><br><span class="line">    private <span class="keyword">static</span> <span class="title class_">String</span> content;       <span class="comment">//发送内容</span></span><br><span class="line">    private <span class="keyword">static</span> int port;             <span class="comment">//发送端口</span></span><br><span class="line">    private <span class="keyword">static</span> int target;           <span class="comment">//目标端口</span></span><br><span class="line">    private <span class="keyword">static</span> byte[] addr;          <span class="comment">//目标ip地址</span></span><br><span class="line">        <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">          构造函数</span></span><br><span class="line"><span class="comment">        ---------------------*/</span></span><br><span class="line">    public <span class="title class_">Client</span>(<span class="title class_">String</span> content,int port,int target,byte[] addr)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">content</span>=content;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">port</span>=port;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">target</span>=target;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">addr</span>=addr;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">          发送端函数</span></span><br><span class="line"><span class="comment">        ---------------------*/</span></span><br><span class="line">    public <span class="keyword">void</span> <span class="title function_">run</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="title class_">DatagramSocket</span> client= <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//定义发送端端口为 port 的DatagramSocket对象</span></span><br><span class="line">            client = <span class="keyword">new</span> <span class="title class_">DatagramSocket</span>(port);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="title class_">SocketException</span> e) &#123;</span><br><span class="line">            e.<span class="title function_">printStackTrace</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title class_">String</span> str=content;</span><br><span class="line"></span><br><span class="line">        <span class="title class_">DatagramPacket</span> packet= <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//定义DatagramPacket对象，用于封装发送的数据以及目标地址 target</span></span><br><span class="line">            packet = <span class="keyword">new</span> <span class="title class_">DatagramPacket</span>(str.<span class="title function_">getBytes</span>(),str.<span class="title function_">getBytes</span>().<span class="property">length</span>,</span><br><span class="line">                    <span class="title class_">InetAddress</span>.<span class="title function_">getByAddress</span>(addr),target);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="title class_">UnknownHostException</span> e) &#123;</span><br><span class="line">            e.<span class="title function_">printStackTrace</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//发送数据</span></span><br><span class="line">            client.<span class="title function_">send</span>(packet);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="title class_">IOException</span> e) &#123;</span><br><span class="line">            e.<span class="title function_">printStackTrace</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//关闭释放资源</span></span><br><span class="line">        client.<span class="title function_">close</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">    接收端</span></span><br><span class="line"><span class="comment">    ---------------------*/</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Server</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Thread</span>&#123;</span><br><span class="line">    private <span class="keyword">static</span> <span class="title class_">JTextArea</span> jt;           <span class="comment">//对话框</span></span><br><span class="line">    private <span class="keyword">static</span> int target;             <span class="comment">//目标端口</span></span><br><span class="line">        <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">              构造函数</span></span><br><span class="line"><span class="comment">        ---------------------*/</span></span><br><span class="line">    public  <span class="title class_">Server</span>(<span class="title class_">JTextArea</span> jt,int target)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">jt</span>=jt;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">target</span>=target;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面展示一些 <code>Server类</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">    接收端</span></span><br><span class="line"><span class="comment">    ---------------------*/</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Server</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Thread</span>&#123;</span><br><span class="line">    private <span class="keyword">static</span> <span class="title class_">JTextArea</span> jt;           <span class="comment">//对话框</span></span><br><span class="line">    private <span class="keyword">static</span> int target;             <span class="comment">//目标端口</span></span><br><span class="line">        <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">              构造函数</span></span><br><span class="line"><span class="comment">        ---------------------*/</span></span><br><span class="line">    public  <span class="title class_">Server</span>(<span class="title class_">JTextArea</span> jt,int target)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">jt</span>=jt;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">target</span>=target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">              接收端函数</span></span><br><span class="line"><span class="comment">        ---------------------*/</span></span><br><span class="line">    public <span class="keyword">void</span> <span class="title function_">run</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="title class_">String</span> str;</span><br><span class="line">        <span class="title class_">DatagramSocket</span> server= <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//定义一个端口号为 target 的接收端DatagramSocket对象</span></span><br><span class="line">            server = <span class="keyword">new</span> <span class="title class_">DatagramSocket</span>(target);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="title class_">SocketException</span> e) &#123;</span><br><span class="line">            e.<span class="title function_">printStackTrace</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        byte[] buf=<span class="keyword">new</span> byte[<span class="number">1024</span>];</span><br><span class="line">        <span class="comment">//定义一个DatagramPacket数据报对象，用于封装接收数据</span></span><br><span class="line">        <span class="title class_">DatagramPacket</span> packet=<span class="keyword">new</span> <span class="title class_">DatagramPacket</span>(buf, buf.<span class="property">length</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//等待接收数据，在数据没有被接收到之前会被堵塞</span></span><br><span class="line">                server.<span class="title function_">receive</span>(packet);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (<span class="title class_">IOException</span> e) &#123;</span><br><span class="line">                e.<span class="title function_">printStackTrace</span>();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//使用DatagramPacket的方法获得接收到的信息，并转为字符串类型</span></span><br><span class="line">            str=<span class="keyword">new</span> <span class="title class_">String</span>(packet.<span class="title function_">getData</span>(),</span><br><span class="line">                    <span class="number">0</span>,packet.<span class="title function_">getLength</span>());</span><br><span class="line">            <span class="comment">//将接收到的信息打印到对话框</span></span><br><span class="line">            jt.<span class="title function_">append</span>(<span class="string">&quot;接收到：&quot;</span>+str+<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面展示一些 <code>Main类</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    public <span class="keyword">static</span> int port;</span><br><span class="line">    public <span class="keyword">static</span> int target;</span><br><span class="line">    public <span class="keyword">static</span> byte[] addr;</span><br><span class="line">    public <span class="keyword">static</span> <span class="keyword">void</span> <span class="title class_">Login</span>()&#123;</span><br><span class="line">        <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">print</span>(<span class="string">&quot;请输入端口号：&quot;</span>);</span><br><span class="line">        <span class="title class_">Scanner</span> <span class="title class_">ScPort</span>=<span class="keyword">new</span> <span class="title class_">Scanner</span>(<span class="title class_">System</span>.<span class="property">in</span>);</span><br><span class="line">        port=<span class="title class_">ScPort</span>.<span class="title function_">nextInt</span>();</span><br><span class="line"></span><br><span class="line">        <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">print</span>(<span class="string">&quot;请输入目标端口号1：&quot;</span>);</span><br><span class="line">        <span class="title class_">Scanner</span> <span class="title class_">ScTarget</span>=<span class="keyword">new</span> <span class="title class_">Scanner</span>(<span class="title class_">System</span>.<span class="property">in</span>);</span><br><span class="line">        target=<span class="title class_">ScTarget</span>.<span class="title function_">nextInt</span>();</span><br><span class="line"></span><br><span class="line">        <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">print</span>(<span class="string">&quot;请输入目标端口号2：&quot;</span>);</span><br><span class="line">        <span class="title class_">Scanner</span> <span class="title class_">ScTarget2</span>=<span class="keyword">new</span> <span class="title class_">Scanner</span>(<span class="title class_">System</span>.<span class="property">in</span>);</span><br><span class="line">        int target2=<span class="title class_">ScTarget2</span>.<span class="title function_">nextInt</span>();</span><br><span class="line"></span><br><span class="line">        <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">print</span>(<span class="string">&quot;请输入目标IP地址：&quot;</span>);</span><br><span class="line">        <span class="title class_">Scanner</span> <span class="title class_">Scaddr</span>=<span class="keyword">new</span> <span class="title class_">Scanner</span>(<span class="title class_">System</span>.<span class="property">in</span>);</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        将目标IP存储到数组中</span></span><br><span class="line"><span class="comment">        -----------------------*/</span></span><br><span class="line">        <span class="title class_">String</span> ip=<span class="title class_">Scaddr</span>.<span class="title function_">nextLine</span>();</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        public String[] split(String regex)：</span></span><br><span class="line"><span class="comment">             根据给定正则表达式的匹配拆分此字符串</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        <span class="title class_">String</span>[] ii=ip.<span class="title function_">split</span>(<span class="string">&quot;\\.&quot;</span>);</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        我们现在使用的IPv4是用一个32位的二进制数来存储的，为了方便记忆，</span></span><br><span class="line"><span class="comment">        会将其分成4个8位的二进制数（4个一字节的二进制数），每8位之间用圆点隔开。</span></span><br><span class="line"><span class="comment">        而每8位二进制数可以转换为一个0~255的十进制数，例如103.42.176.244，</span></span><br><span class="line"><span class="comment">        这种写法被称为点数表示法</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        byte[] addr=<span class="keyword">new</span> byte[<span class="number">4</span>];</span><br><span class="line">        <span class="keyword">for</span>(int i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</span><br><span class="line">            addr[i]=(byte)(<span class="title class_">Integer</span>.<span class="built_in">parseInt</span>(ii[i]));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">println</span>(<span class="string">&quot;窗口启动中....&quot;</span>);</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Server</span>(<span class="title class_">CreateAndShowGUI</span>(port,target,addr),target2),<span class="string">&quot;接收服务&quot;</span>).<span class="title function_">start</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">    GUI界面</span></span><br><span class="line"><span class="comment">    ---------------------*/</span></span><br><span class="line">    public <span class="keyword">static</span> <span class="title class_">JTextArea</span> <span class="title class_">CreateAndShowGUI</span>(int port,int target,byte[] addr)&#123;</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        创建界面</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        <span class="title class_">JFrame</span> jf=<span class="keyword">new</span> <span class="title class_">JFrame</span>(<span class="string">&quot;聊天界面&quot;</span>);</span><br><span class="line">        jf.<span class="title function_">setLocation</span>(<span class="number">400</span>,<span class="number">200</span>);</span><br><span class="line">        jf.<span class="title function_">setSize</span>(<span class="number">400</span>,<span class="number">300</span>);</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        设置布局</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        jf.<span class="title function_">setLayout</span>(<span class="keyword">new</span> <span class="title class_">BorderLayout</span>());</span><br><span class="line">        jf.<span class="title function_">setDefaultCloseOperation</span>(<span class="title class_">JFrame</span>.<span class="property">EXIT_ON_CLOSE</span>);</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        创建聊天窗口</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        <span class="title class_">JTextArea</span> jt=<span class="keyword">new</span> <span class="title class_">JTextArea</span>(<span class="number">14</span>,<span class="number">34</span>);</span><br><span class="line">        <span class="title class_">JScrollPane</span> scrollPane=<span class="keyword">new</span> <span class="title class_">JScrollPane</span>(jt);</span><br><span class="line">        jt.<span class="title function_">setEditable</span>(<span class="literal">false</span>);</span><br><span class="line">        <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">        创建发送窗口</span></span><br><span class="line"><span class="comment">         ----------------------*/</span></span><br><span class="line">        <span class="title class_">JTextField</span> jte=<span class="keyword">new</span> <span class="title class_">JTextField</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">        <span class="title class_">JButton</span> jb=<span class="keyword">new</span> <span class="title class_">JButton</span>(<span class="string">&quot;发送&quot;</span>);</span><br><span class="line">        jb.<span class="title function_">addActionListener</span>(e-&gt;&#123;</span><br><span class="line">            <span class="title class_">String</span> content=jte.<span class="title function_">getText</span>();</span><br><span class="line">            <span class="comment">/*---------------------</span></span><br><span class="line"><span class="comment">            为发送按钮创建动作</span></span><br><span class="line"><span class="comment">             ----------------------*/</span></span><br><span class="line">            <span class="keyword">if</span> (content!=<span class="literal">null</span>&amp;&amp;!content.<span class="title function_">trim</span>().<span class="title function_">equals</span>(<span class="string">&quot;&quot;</span>))&#123;</span><br><span class="line">                <span class="comment">/*-------------------</span></span><br><span class="line"><span class="comment">                判断信息是否为空</span></span><br><span class="line"><span class="comment">                若为空，在在对话框提示 你输入的内容为空</span></span><br><span class="line"><span class="comment">                反之发送</span></span><br><span class="line"><span class="comment">                 --------------------*/</span></span><br><span class="line">                jt.<span class="title function_">append</span>(<span class="string">&quot;输入信息为：&quot;</span>+content+<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">                <span class="comment">/*--------------</span></span><br><span class="line"><span class="comment">                将发送框信息发送到目标对话框</span></span><br><span class="line"><span class="comment">                传入Client方法的参数分别为</span></span><br><span class="line"><span class="comment">                “发送内容，发送端口，目标端口，目标IP地址”</span></span><br><span class="line"><span class="comment">                ----------------*/</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Client</span>(content,port,target,addr),<span class="string">&quot;发送服务&quot;</span>).<span class="title function_">start</span>();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (<span class="title class_">Exception</span> exception) &#123;</span><br><span class="line">                    exception.<span class="title function_">printStackTrace</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                jt.<span class="title function_">append</span>(<span class="string">&quot;你输入的内容为空&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            jte.<span class="title function_">setText</span>(<span class="string">&quot;&quot;</span>);      <span class="comment">//信息发送后，将发送框重置</span></span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="title class_">JPanel</span> jp=<span class="keyword">new</span> <span class="title class_">JPanel</span>();</span><br><span class="line">        <span class="title class_">JLabel</span> jl=<span class="keyword">new</span> <span class="title class_">JLabel</span>(<span class="string">&quot;聊天信息&quot;</span>);</span><br><span class="line"></span><br><span class="line">        jp.<span class="title function_">add</span>(jl);</span><br><span class="line">        jp.<span class="title function_">add</span>(jte);</span><br><span class="line">        jp.<span class="title function_">add</span>(jb);</span><br><span class="line">        jf.<span class="title function_">add</span>(jt,<span class="title class_">BorderLayout</span>.<span class="property">PAGE_START</span>);</span><br><span class="line">        jf.<span class="title function_">add</span>(jp,<span class="title class_">BorderLayout</span>.<span class="property">PAGE_END</span>);</span><br><span class="line">        <span class="comment">//显示GUI界面</span></span><br><span class="line">        jf.<span class="title function_">setVisible</span>(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> jt;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span>(<span class="title class_">String</span>[] args) throws <span class="title class_">Exception</span>&#123;</span><br><span class="line">        <span class="title class_">Login</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行截图"><a href="#运行截图" class="headerlink" title="运行截图"></a>运行截图</h2><p>登录界面（一）<br><img src="https://img-blog.csdnimg.cn/20210418122609330.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4Nzc4MzY0,size_16,color_FFFFFF,t_70#pic_center" alt="登录界面（一）"><br>登录界面（二）<br><img src="https://img-blog.csdnimg.cn/20210418122717175.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4Nzc4MzY0,size_16,color_FFFFFF,t_70#pic_center" alt="登录界面（二）"><br>聊天界面（一）<br><img src="https://img-blog.csdnimg.cn/20210418122735415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4Nzc4MzY0,size_16,color_FFFFFF,t_70#pic_center" alt="GUI（一）"><br>聊天界面（二）<br><img src="https://img-blog.csdnimg.cn/20210418122824916.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4Nzc4MzY0,size_16,color_FFFFFF,t_70#pic_center" alt="GUI（二）"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>UDP协议是无连接通信，即在数据传输时，数据的发送端和接收端不建立逻辑链接。也就是，当一台计算机想另外一台计算机发送消息时，发送端不会确定接收端是否存在，就会发送数据。同样，接收端在接收到消息后也不会反馈发送端是否受到数据。但UDP消耗资源小、通讯效率高、延迟小。所以，虽然UDP是一个不可靠的协议，但它是分发信息的一个理想协议。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Arno Dorian</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/05/21/%E5%9F%BA%E4%BA%8EUDP%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%81%8A%E5%A4%A9%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%90%ABGUI%EF%BC%89/">http://example.com/2021/05/21/%E5%9F%BA%E4%BA%8EUDP%E5%8D%8F%E8%AE%AE%E7%9A%84%E8%81%8A%E5%A4%A9%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%90%ABGUI%EF%BC%89/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JAVA/"># JAVA</a>
+                    
+                        
+                </span>
+            </div>
+			
+			<!-- ******************************************************* -->
+			
+			<!-- 支持一下的按钮与图片 -->
+			
+			<div class="reward" id="reward">
+			
+			<div class="sponser">
+			
+			<div class="sponser_btn">支持一下</div>
+			
+			<div class="sponser_img">
+			
+			<div class="sponser_container">
+			
+			
+			
+			<div class="sponser_body">
+			
+
+			<div class="alipay">
+			
+			
+			
+			<div> 
+			
+			
+			<img class="sponser_alipay" src="/image/QR.jpg">
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			<!-- **************************************************** -->
+			
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/07/hello-world/">Hello World</a>
+            
+            
+            <a class="next" rel="next" href="/2020/11/20/%E8%B4%AA%E5%90%83%E8%9B%87%EF%BC%88%E5%90%AB%E6%9C%89%E5%9B%BE%E5%BD%A2%E5%BA%93%E5%92%8C%E8%83%8C%E6%99%AF%E9%9F%B3%E4%B9%90%EF%BC%89/">C++贪吃蛇（含有图形库和背景音乐）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Arno Dorian | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+		 |
+		
+		 <!-- 访客数量 -->
+		
+		 
+		
+		 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<span class="site-uv">
+
+ 总访客量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+
+</span>&nbsp;
+
+
+
+
+
+<span class="site-pv">
+
+ | 总访问量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+
+</span>
+
+
+		
+		 
+
+		</span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
