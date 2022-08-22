@@ -625,6 +625,72 @@
 <p>like 占位符示例(以employee示例)</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span>  <span class="keyword">from</span> employee <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;___&#x27;</span>;</span><br></pre></td></tr></table></figure>
 </blockquote>
+<h5 id="关于-LIKE"><a href="#关于-LIKE" class="headerlink" title="关于 LIKE"></a>关于 LIKE</h5><h6 id="不包含-not-like"><a href="#不包含-not-like" class="headerlink" title="不包含 not like"></a>不包含 not like</h6><p>例：</p>
+<p>从 Products 表中检索产品名称（prod_name）和描述（prod_desc），仅返回描述中未出现 toy 一词的产品，最后按”产品名称“对结果进行排序</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> prod_name,prod_desc <span class="keyword">from</span> Products <span class="keyword">where</span> prod_desc <span class="keyword">not</span> <span class="keyword">like</span> <span class="string">&#x27;%toy%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<table>
+<thead>
+<tr>
+<th align="left">通配符</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">%</td>
+<td align="left">代表零个或多个字符</td>
+</tr>
+<tr>
+<td align="left">_</td>
+<td align="left">仅替代一个字符</td>
+</tr>
+<tr>
+<td align="left">[charlist]</td>
+<td align="left">字符列中的任何单一字符</td>
+</tr>
+<tr>
+<td align="left">[^charlist]或者[!charlist]</td>
+<td align="left">不在字符列中的任何单一字符</td>
+</tr>
+</tbody></table>
+<h6 id="使用通配符"><a href="#使用通配符" class="headerlink" title="使用通配符 %"></a>使用通配符 %</h6><p>例1：</p>
+<p>希望从表中选取居住在以 “Ne” 开始的城市里的人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> City <span class="keyword">LIKE</span> <span class="string">&#x27;Ne%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>例2：</p>
+<p>希望从表中选取居住在包含 “lond” 的城市里的人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> City <span class="keyword">LIKE</span> <span class="string">&#x27;%lond%&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="使用通配符-1"><a href="#使用通配符-1" class="headerlink" title="使用通配符 _"></a>使用通配符 _</h6><p>例1：</p>
+<p>希望从表中选取名字的第一个字符之后是 “eorge” 的人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> FirstName <span class="keyword">LIKE</span> <span class="string">&#x27;_eorge&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>例2：</p>
+<p>希望从表中选取的这条记录的姓氏以 “C” 开头，然后是一个任意字符，然后是 “r”，然后是一个任意字符，然后是 “er”</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> LastName <span class="keyword">LIKE</span> <span class="string">&#x27;C_r_er&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="使用-charlist-通配符"><a href="#使用-charlist-通配符" class="headerlink" title="使用 [charlist] 通配符"></a>使用 [charlist] 通配符</h6><p>例1：</p>
+<p>希望从表中选取居住的城市以 “A” 或 “L” 或 “N” 开头的人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> City <span class="keyword">LIKE</span> <span class="string">&#x27;[ALN]%&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>例2：</p>
+<p>希望从表中选取居住的城市<em>不以</em> “A” 或 “L” 或 “N” 开头的人</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons</span><br><span class="line"><span class="keyword">WHERE</span> City <span class="keyword">LIKE</span> <span class="string">&#x27;[!ALN]%&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
 <h5 id="DQL-聚合函数"><a href="#DQL-聚合函数" class="headerlink" title="DQL-聚合函数"></a>DQL-聚合函数</h5><p>1.常见聚合函数</p>
 <table>
 <thead>
