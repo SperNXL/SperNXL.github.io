@@ -729,8 +729,101 @@
 <h5 id="DQL-分组查询"><a href="#DQL-分组查询" class="headerlink" title="DQL-分组查询"></a>DQL-分组查询</h5><p>1.语法</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段列表 <span class="keyword">from</span> 表名 [<span class="keyword">where</span> 条件] <span class="keyword">group</span> <span class="keyword">by</span> 分组字段名 [<span class="keyword">having</span> 分组后过滤条件];</span><br></pre></td></tr></table></figure>
 
+<p><code>group by </code>是根据字段里不重复数据分组</p>
+<p>例：</p>
+<p>原表</p>
+<table>
+<thead>
+<tr>
+<th>姓名</th>
+<th>性别</th>
+<th>年龄</th>
+<th>地点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>it</td>
+<td>男</td>
+<td>10</td>
+<td>重庆</td>
+</tr>
+<tr>
+<td>ztt</td>
+<td>女</td>
+<td>18</td>
+<td>北京</td>
+</tr>
+<tr>
+<td>asd</td>
+<td>女</td>
+<td>18</td>
+<td>重庆</td>
+</tr>
+<tr>
+<td>nxl</td>
+<td>男</td>
+<td>18</td>
+<td>北京</td>
+</tr>
+<tr>
+<td>xcc</td>
+<td>女</td>
+<td>18</td>
+<td>天津</td>
+</tr>
+<tr>
+<td>zt</td>
+<td>女</td>
+<td>25</td>
+<td>北京</td>
+</tr>
+<tr>
+<td>nx</td>
+<td>男</td>
+<td>30</td>
+<td>重庆</td>
+</tr>
+</tbody></table>
+<p>使用 <code>group by</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> address <span class="keyword">as</span> <span class="string">&#x27;地址&#x27;</span>,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">as</span> <span class="string">&#x27;总计&#x27;</span> </span><br><span class="line"><span class="keyword">from</span> employee </span><br><span class="line"><span class="keyword">where</span> age<span class="operator">&gt;=</span><span class="number">17</span> </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> address;</span><br></pre></td></tr></table></figure>
 
 
+
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>总计</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>北京</td>
+<td>3</td>
+</tr>
+<tr>
+<td>天津</td>
+<td>1</td>
+</tr>
+<tr>
+<td>重庆</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<p>加上 <code>having</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> address <span class="keyword">as</span> <span class="string">&#x27;地址&#x27;</span>,<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">as</span> <span class="string">&#x27;总计&#x27;</span> </span><br><span class="line"><span class="keyword">from</span> employee </span><br><span class="line"><span class="keyword">where</span> age<span class="operator">&gt;=</span><span class="number">17</span> </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> address <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>)<span class="operator">&gt;=</span><span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>总计</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>北京</td>
+<td>3</td>
+</tr>
+</tbody></table>
 <p>2.<code>where</code> 和 <code>having</code> 区别</p>
 <ul>
 <li><p>执行时机不同：<code>where</code> 是分组之前进行过滤，不满足 <code>where</code> 条件，不参与分组；而having是分组之后对结果进行过滤。</p>
