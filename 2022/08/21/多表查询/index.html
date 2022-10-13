@@ -361,8 +361,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>小李</td>
+<td>小王</td>
 <td>老师</td>
+</tr>
+<tr>
+<td>小李</td>
+<td>医生</td>
 </tr>
 </tbody></table>
 <hr>
@@ -569,7 +573,7 @@
 </thead>
 <tbody><tr>
 <td>in</td>
-<td>在指定的集合范围之内，多选一</td>
+<td>IN 操作符允许您在 WHERE 子句中规定多个值</td>
 </tr>
 <tr>
 <td>not in</td>
@@ -591,10 +595,64 @@
 </li>
 </ul>
 <p>示例：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 列子查询</span></span><br><span class="line"><span class="comment">-- 例 1</span></span><br><span class="line"><span class="comment">-- 1.查询”销售部“和”市场部“的所有员工信息</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---a.查询“人事部” 和”财务部“的部门ID</span></span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;人事部&#x27;</span> <span class="operator">||</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---b.根据部门ID，查询员工信息</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="keyword">in</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;人事部&#x27;</span> <span class="operator">||</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 例 2</span></span><br><span class="line"><span class="comment">-- 2.查询比财务部所有人工资都高的人员信息</span></span><br><span class="line"><span class="comment">-- ---a.查询所有 财务部 人员工资</span></span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> salary <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="operator">=</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---b.比 财务部所有人工资都高的员工信息</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> salary <span class="operator">&gt;</span> <span class="keyword">all</span> (<span class="keyword">select</span> salary <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="operator">=</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*****************************************************</span></span><br><span class="line"><span class="comment">*其中 salary &gt; all() 指的是 比all() 中的所有 salary 都高</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">******************************************************/</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 列子查询</span></span><br><span class="line"><span class="comment">-- 例 1</span></span><br><span class="line"><span class="comment">-- 1.查询”销售部“和”市场部“的所有员工信息</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---a.查询“人事部” 和”财务部“的部门ID</span></span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;人事部&#x27;</span> <span class="operator">||</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---b.根据部门ID，查询员工信息</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="keyword">in</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;人事部&#x27;</span> <span class="operator">||</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---c.</span></span><br><span class="line"><span class="comment">-- 建表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `Orders`;</span><br><span class="line">  <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `Orders`(</span><br><span class="line">    order_num <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;商品订单号&#x27;</span>,</span><br><span class="line">    cust_id <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;顾客id&#x27;</span>,</span><br><span class="line">    order_date <span class="type">TIMESTAMP</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;下单时间&#x27;</span></span><br><span class="line">  );</span><br><span class="line"><span class="keyword">INSERT</span> `Orders` <span class="keyword">VALUES</span> (<span class="string">&#x27;a0001&#x27;</span>,<span class="string">&#x27;cust10&#x27;</span>,<span class="string">&#x27;2022-01-01 00:00:00&#x27;</span>),                                    (<span class="string">&#x27;a0002&#x27;</span>,<span class="string">&#x27;cust1&#x27;</span>,<span class="string">&#x27;2022-01-01 00:01:00&#x27;</span>),</span><br><span class="line">                       (<span class="string">&#x27;a0003&#x27;</span>,<span class="string">&#x27;cust1&#x27;</span>,<span class="string">&#x27;2022-01-02 00:00:00&#x27;</span>),</span><br><span class="line">                       (<span class="string">&#x27;a0013&#x27;</span>,<span class="string">&#x27;cust2&#x27;</span>,<span class="string">&#x27;2022-01-01 00:20:00&#x27;</span>);</span><br><span class="line">                       </span><br><span class="line">                       </span><br><span class="line">                       </span><br><span class="line"><span class="comment">-- 查询</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> Orders <span class="keyword">where</span> cust_id <span class="keyword">in</span> (<span class="string">&#x27;cust1&#x27;</span>,<span class="string">&#x27;cust2&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 例 2</span></span><br><span class="line"><span class="comment">-- 2.查询比财务部所有人工资都高的人员信息</span></span><br><span class="line"><span class="comment">-- ---a.查询所有 财务部 人员工资</span></span><br><span class="line"><span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> salary <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="operator">=</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ---b.比 财务部所有人工资都高的员工信息</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp <span class="keyword">where</span> salary <span class="operator">&gt;</span> <span class="keyword">all</span> (<span class="keyword">select</span> salary <span class="keyword">from</span> emp <span class="keyword">where</span> dept_id <span class="operator">=</span> (<span class="keyword">select</span> id <span class="keyword">from</span> dept <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;财务部&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/*****************************************************</span></span><br><span class="line"><span class="comment">*其中 salary &gt; all() 指的是 比all() 中的所有 salary 都高</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">******************************************************/</span></span><br></pre></td></tr></table></figure>
 
-
-
+<p>例1.c的结果</p>
+<p>建表：</p>
+<table>
+<thead>
+<tr>
+<th>order_num</th>
+<th>cust_id</th>
+<th>order_date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a0001</td>
+<td>cust10</td>
+<td>2022-01-01 00:00:00</td>
+</tr>
+<tr>
+<td>a0002</td>
+<td>cust1</td>
+<td>2022-01-01 00:01:00</td>
+</tr>
+<tr>
+<td>a0003</td>
+<td>cust1</td>
+<td>2022-01-02 00:00:00</td>
+</tr>
+<tr>
+<td>a0013</td>
+<td>cust2</td>
+<td>2022-01-01 00:20:00</td>
+</tr>
+</tbody></table>
+<p>查询结果：</p>
+<table>
+<thead>
+<tr>
+<th>order_num</th>
+<th>cust_id</th>
+<th>order_date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a0002</td>
+<td>cust1</td>
+<td>2022-01-01 00:01:00</td>
+</tr>
+<tr>
+<td>a0003</td>
+<td>cust1</td>
+<td>2022-01-02 00:00:00</td>
+</tr>
+<tr>
+<td>a0013</td>
+<td>cust2</td>
+<td>2022-01-01 00:20:00</td>
+</tr>
+</tbody></table>
 <h5 id="行子查询"><a href="#行子查询" class="headerlink" title="行子查询"></a>行子查询</h5><ul>
 <li>子查询返回的结果是一行（可以是多列），这种子查询成为行子查询。</li>
 <li>常用的操作符：=、&lt;&gt;、in、not in</li>
