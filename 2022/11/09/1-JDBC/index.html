@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Arno Dorian">
+
+
+
+
+
+<title>1--JDBC | Arno&#39;blogs</title>
+
+
+
+    <link rel="icon" href="/Cube.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./iconfont.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Arno&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Arno&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">1--JDBC</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Arno Dorian</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十一月 9, 2022&nbsp;&nbsp;17:14:10</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JAVA/">JAVA</a>
+                            
+                                <a href="/categories/JAVA/JavaWeb/">JavaWeb</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="JDBC简介"><a href="#JDBC简介" class="headerlink" title="JDBC简介"></a>JDBC简介</h3><ul>
+<li>JDBC概念<ul>
+<li>JDBC就是使用Java语言操作关系型数据库的一套API</li>
+<li>全程（Java DataBase Connectivity）Java数据库连接</li>
+</ul>
+</li>
+<li>JDBC本质<ul>
+<li>官方（sun公司）定义的一套操作所有关系型数据库的规则，即接口</li>
+<li>各个数据库厂商去实现这套接口，提供数据库驱动jar包</li>
+<li>我们可以使用这套接口(JDBC)编程，真正执行的代码是驱动jar包中的实现类</li>
+</ul>
+</li>
+<li>JDBC好处<ul>
+<li>各数据库厂商使用相同的接口，Java代码不需要针对不同数据库进行开发</li>
+<li>随时替换底层数据库，访问数据库的Java代码保持不变</li>
+</ul>
+</li>
+</ul>
+<p><img src="JDBC.png" alt="JDBC"></p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>```java<br>//1.注册驱动<br>Class.forName(“com.mysql.cj.jdbc.Driver”);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. ```java</span><br><span class="line">   //2.获取连接</span><br><span class="line">   String url=&quot;jdbc:mysql://localhost:3306/db1&quot;;</span><br><span class="line">   String username=&quot;root&quot;;</span><br><span class="line">   String password=&quot;123&quot;;</span><br><span class="line">   Connection conn=DriverManager.getConnection(url,username,password);</span><br></pre></td></tr></table></figure></li>
+<li><p>```java<br>//3.定义sql<br>String sql=”update ATe2 set item_price=5 where ID=’cust2’”;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. ```java</span><br><span class="line">   //获取执行sql的对象Statement</span><br><span class="line">   Statement stmt = conn.createStatement();</span><br></pre></td></tr></table></figure></li>
+<li><p>```java<br>//5.执行sql<br>int count = stmt.executeUpdate(sql);//受影响的行数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">6. ```java</span><br><span class="line">   //6.处理结果</span><br><span class="line">   System.out.println(count);</span><br></pre></td></tr></table></figure></li>
+<li><p>```java<br>//7.释放资源<br>stmt.close();<br>conn.close();</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### JDBC API详解</span><br><span class="line"></span><br><span class="line">- DriverManager</span><br><span class="line">- Connection</span><br><span class="line">- Statement</span><br><span class="line">- ResultSet</span><br><span class="line">- PrepareStatement</span><br><span class="line"></span><br><span class="line">------</span><br><span class="line"></span><br><span class="line">##### DriverManager(驱动管理类)作用：</span><br><span class="line"></span><br><span class="line">1. 注册驱动</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   //1.注册驱动</span><br><span class="line">   Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Driver类的源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Driver</span> <span class="keyword">extends</span> <span class="title class_">NonRegisteringDriver</span> <span class="keyword">implements</span> <span class="title class_">java</span>.sql.Driver &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Driver</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            DriverManager.registerDriver(<span class="keyword">new</span> <span class="title class_">Driver</span>());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException var1) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Can&#x27;t register driver!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>提示：</p>
+<ul>
+<li>MySQL 5之后的驱动包，可以省略注册驱动的步骤</li>
+<li>自动加载jar包中META-INF/services/java.sql.Driver文件中的驱动类</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>获取数据库连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DriverManager.getConnection(url,username,password)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>参数</p>
+<p>1.url:连接路径</p>
+<blockquote>
+<p>语法：</p>
+<ul>
+<li><code>jdbc:mysql://ip地址（域名）：端口号/数据库名称?参数值对1&amp;参数值对          2....</code></li>
+</ul>
+<p>示例：<code>jdbc:mysql://127.0.0.1:3306/db1</code></p>
+<p>细节：</p>
+<ul>
+<li>如果连接的是本机mysql服务器，并且mysql服务默认端口是3306，则url可以简写为：<code>jdbc:mysql:///数据库名称?参数值对</code></li>
+<li>配置useSSL=false参数，禁用安全连接方式，解决警告提示</li>
+</ul>
+</blockquote>
+<p>2.user：用户名</p>
+<p>3.password：密码</p>
+</li>
+</ul>
+</li>
+</ol>
+<h5 id="Connection"><a href="#Connection" class="headerlink" title="Connection"></a>Connection</h5><ol>
+<li><p>获取执行SQL的对象</p>
+<ul>
+<li><p>普通执行SQL对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Statement <span class="title function_">createStatement</span><span class="params">()</span></span><br></pre></td></tr></table></figure></li>
+<li><p>预编译SQL的执行SQL对象：防止SQL注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PreparedStatement <span class="title function_">prepareStatement</span><span class="params">()</span></span><br></pre></td></tr></table></figure></li>
+<li><p>执行存储过程的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CallableStatement <span class="title function_">prepareCall</span><span class="params">(sql)</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>事务管理</p>
+<ul>
+<li><p>MySQL事务管理</p>
+<blockquote>
+<p>开启事务：BEGIN;/START TRANSACTION;</p>
+<p>提交事务：COMMIT;</p>
+<p>回滚事务：ROLLBACK；</p>
+<p>MySQL默认自动提交事务</p>
+</blockquote>
+</li>
+<li><p>JDBC事务管理：Connection接口中定义了3个对应的方法</p>
+<blockquote>
+<p>开启事务：setAutoCommit(boolean autoCommit):true为自动提交事务；false为手动提交事务，即为开启事务</p>
+<p>提交事务：commit()</p>
+<p>回滚事务：rollback()</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h5 id="Statement"><a href="#Statement" class="headerlink" title="Statement"></a>Statement</h5><ul>
+<li><p>Statement作用：</p>
+<ol>
+<li>执行SQL语句</li>
+</ol>
+</li>
+<li><p>执行SQL语句</p>
+<p><code>int executeUpdate(sql)</code>：执行DML、DDL语句</p>
+<p><code>ResultSet executeQuery(sql)</code>：执行DQL语句，返回值：ResultSet结果集</p>
+</li>
+</ul>
+<h5 id="ResultSet"><a href="#ResultSet" class="headerlink" title="ResultSet"></a>ResultSet</h5><ul>
+<li><p>ResultSet(结果集对象)作用：</p>
+<p>1.封装了DQL查询语句的结果</p>
+<p><code>ResultSet stmt.executeQuery(sql)</code>:执行DQL语句，返回ResultSet对象</p>
+</li>
+<li><p>获取查询结果</p>
+<p><code>boolean next()</code>：（1）将光标从当前位置向前移动一行  （2）判断当前行是否为有效行</p>
+<blockquote>
+<p>返回值：</p>
+<ul>
+<li>true：有效行，当前行有数据</li>
+<li>false：无效行，当前行没有数据</li>
+</ul>
+</blockquote>
+<p><code>xxx getXxx</code>(参数):获取数据</p>
+<blockquote>
+<p>xxx：数据类型；如：int getInt(参数);String getString(参数)</p>
+<p>参数：</p>
+<ul>
+<li>int：列的编号，从<strong>1</strong>开始</li>
+<li>String：列的名称</li>
+</ul>
+</blockquote>
+</li>
+<li><p>使用</p>
+<ol>
+<li>游标向下移动一行，并判断该行是否有数据next()</li>
+<li>获取数据：getXxx(参数)</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//循环判断游标是否是最后一行末尾</span></span><br><span class="line"><span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">    <span class="comment">//获取数据</span></span><br><span class="line">    rs.getXxx(参数);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//3.定义sql</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from emp&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4.获取statement对象</span></span><br><span class="line">        <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> conn.createStatement();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//5.执行sql</span></span><br><span class="line">        <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//6.遍历数据</span></span><br><span class="line">        <span class="keyword">while</span> (rs.next())&#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            *参数为第一列，第二列...</span></span><br><span class="line"><span class="comment">            **/</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">ID</span> <span class="operator">=</span> rs.getInt(<span class="number">1</span>);              </span><br><span class="line">            <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> rs.getString(<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//7.释放资源</span></span><br><span class="line">        stmt.close();</span><br><span class="line">        conn.close();</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="PrepareStatement"><a href="#PrepareStatement" class="headerlink" title="PrepareStatement"></a>PrepareStatement</h5><ul>
+<li><p>SQL注入</p>
+<ul>
+<li><p>SQL注入是通过操作输入来修改实现定义好 的SQL语句，用以达到执行代码对服务器的攻击的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接受用户输入 用户名和密码,此语句用于查询用户；里面的sql语句是字符串拼接的结果</span></span><br><span class="line">String name=<span class="string">&quot;nxl&quot;</span>;</span><br><span class="line">String psw=<span class="string">&quot;321&quot;</span>;</span><br><span class="line"></span><br><span class="line">String sql=<span class="string">&quot;select * from yong_hu where name=&#x27;&quot;</span>+name+<span class="string">&quot;&#x27; and psw=&#x27;&quot;</span>+psw+<span class="string">&quot;&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>利用字符串拼接，我们可以SQL注入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 结果可以查询到所有用户，所以  &#x27; or &#x27;1&#x27;=&#x27;1   就可以成为万能密码</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> yong_hu <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;asdacasc&#x27;</span> <span class="keyword">and</span> psw<span class="operator">=</span><span class="string">&#x27;&#x27;</span> <span class="keyword">or</span> <span class="string">&#x27;1&#x27;</span><span class="operator">=</span><span class="string">&#x27;1&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String name=<span class="string">&quot;nxl&quot;</span>;</span><br><span class="line">String psw=<span class="string">&quot;&#x27; or &#x27;1&#x27;=&#x27;1&quot;</span>;</span><br><span class="line"></span><br><span class="line">String sql=<span class="string">&quot;select * from yong_hu where name=&#x27;&quot;</span>+name+<span class="string">&quot;&#x27; and psw=&#x27;&quot;</span>+psw+<span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line"><span class="comment">//这就完成了SQL注入</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>PrepareStatement作用：</p>
+<ol>
+<li><p>预编译SQL语句并执行：预防SQL注入问题</p>
+<ul>
+<li><p>获取PrepareStatement对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//SQL语句中的参数值，使用？占位符代替</span></span><br><span class="line">String sql=<span class="string">&quot;select * from user where username=? and password=?&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//通过Connection对象获取，并传入对应的sql语句</span></span><br><span class="line">PrepareStatement pstmt=conn.prepareStatement(sql)</span><br></pre></td></tr></table></figure></li>
+<li><p>设置参数值</p>
+<blockquote>
+<p>PrepareStatement对象：setXxx(参数1，参数2):给？赋值</p>
+<ul>
+<li>Xxx：数据类型：如setInt(参数1，参数2)</li>
+<li>参数:<ul>
+<li>参数1：？的位置编号，从1开始</li>
+<li>参数2：？的值</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>执行SQL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">executeUpdate()；或 executeQuery()； 不需要再传递sql</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接受用户输入 用户名和密码</span></span><br><span class="line">        String name=<span class="string">&quot;nxl&quot;</span>;</span><br><span class="line">        String psw=<span class="string">&quot;&#x27; or &#x27;1&#x27;=&#x27;1&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//定义SQL</span></span><br><span class="line">        String sql=<span class="string">&quot;select * from yong_hu where name=? and psw=?&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取PrepareStatement对象</span></span><br><span class="line">        <span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span class="operator">=</span> conn.prepareStatement(sql);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置？的值</span></span><br><span class="line">        pstmt.setString(<span class="number">1</span>,name);</span><br><span class="line">        pstmt.setString(<span class="number">2</span>,psw);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//执行SQL</span></span><br><span class="line">        <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> pstmt.executeQuery();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(rs.next())&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;登录成功&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;登陆失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//结果登陆失败</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>PrepareStatement原理&amp;好处</p>
+<ol>
+<li>在获取PrepareStatement的对象时，将sql语句发送给mysql服务器进行检查，编译（这些步骤很耗时）</li>
+<li>执行时就不用进行这些步骤了，速度更快</li>
+<li>如果sql模板一样，则只需要进行一次检查、编译</li>
+</ol>
+<p>好处：</p>
+<ol>
+<li>预编译SQL，性能更高</li>
+<li>防止SQL注入：将敏感字符进行转义</li>
+</ol>
+<p><code>PrepareStatement预编译功能开启：userServerPreStmts=true</code></p>
+</li>
+</ul>
+<h3 id="数据连接池"><a href="#数据连接池" class="headerlink" title="数据连接池"></a>数据连接池</h3><ul>
+<li>数据连接池简介</li>
+<li>Druid数据库连接池</li>
+</ul>
+<hr>
+<h4 id="数据库连接池简介"><a href="#数据库连接池简介" class="headerlink" title="数据库连接池简介"></a>数据库连接池简介</h4><ul>
+<li>数据库连接池是个容器，负责分配、管理数据库连接（Connection）</li>
+<li>它允许应用程序重复使用一个现有的数据库连接，而不是重新建立一个</li>
+<li>释放空闲时间超过最大空闲时间的数据库连接来避免因为没有释放数据库而引起的数据库连接遗漏</li>
+<li>好处：<ul>
+<li>资源复用</li>
+<li>提高系统响应速度</li>
+<li>避免数据库连接遗漏</li>
+</ul>
+</li>
+</ul>
+<h6 id="数据库连接池的实现"><a href="#数据库连接池的实现" class="headerlink" title="数据库连接池的实现"></a>数据库连接池的实现</h6><ul>
+<li><p>标准接口：DataSource</p>
+<ul>
+<li><p>官方（SUN）提供的数据库连接池标准接口，由第三方组织实现此接口。</p>
+</li>
+<li><p>功能：获取连接</p>
+<p><code>Connection getConnection()</code></p>
+</li>
+</ul>
+</li>
+<li><p>常见的数据库连接池：</p>
+<ul>
+<li>DBCP</li>
+<li>C2P0</li>
+<li>Druid</li>
+</ul>
+</li>
+<li><p>Druid(德鲁伊)</p>
+<ul>
+<li>Druid连接池是阿里巴巴开源的数据库池项目</li>
+<li>功能强大，性能优秀，是JAVA语言最好的数据库连接池之一</li>
+</ul>
+</li>
+</ul>
+<h6 id="Druid使用步骤"><a href="#Druid使用步骤" class="headerlink" title="Druid使用步骤"></a>Druid使用步骤</h6><ol>
+<li>导入jar包 </li>
+<li>定义配置文件</li>
+<li>加载配置文件</li>
+<li>获取数据库连接池对象</li>
+<li>获取连接</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Arno Dorian</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/11/09/1-JDBC/">http://example.com/2022/11/09/1-JDBC/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JAVA/"># JAVA</a>
+                    
+                        <a href="/tags/JavaWeb/"># JavaWeb</a>
+                    
+                        
+                </span>
+            </div>
+			
+			<!-- ******************************************************* -->
+			
+			<!-- 支持一下的按钮与图片 -->
+			
+			<div class="reward" id="reward">
+			
+			<div class="sponser">
+			
+			<div class="sponser_btn">支持一下</div>
+			
+			<div class="sponser_img">
+			
+			<div class="sponser_container">
+			
+			
+			
+			<div class="sponser_body">
+			
+
+			<div class="alipay">
+			
+			
+			
+			<div> 
+			
+			
+			<img class="sponser_alipay" src="/image/QR.jpg">
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			<!-- **************************************************** -->
+			
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/11/09/2-Maven/">2--Maven</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/25/2-%E7%B4%A2%E5%BC%95/">2_索引</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Arno Dorian | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+		 |
+		
+		 <!-- 访客数量 -->
+		
+		 
+		
+		 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<span class="site-uv">
+
+ 总访客量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+
+</span>&nbsp;
+
+
+
+
+
+<span class="site-pv">
+
+ | 总访问量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+
+</span>
+
+
+		
+		 
+
+		</span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

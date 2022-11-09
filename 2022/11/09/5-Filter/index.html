@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Arno Dorian">
+
+
+
+
+
+<title>5--Filter&amp;Listener | Arno&#39;blogs</title>
+
+
+
+    <link rel="icon" href="/Cube.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./iconfont.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Arno&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Arno&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">5--Filter&amp;Listener</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Arno Dorian</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十一月 9, 2022&nbsp;&nbsp;17:57:19</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JAVA/">JAVA</a>
+                            
+                                <a href="/categories/JAVA/JavaWeb/">JavaWeb</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <ul>
+<li><p>概念：Filter表示过滤器，是JavaWeb三大组件（Servlet、Filter，Listener）之一。</p>
+</li>
+<li><p>过滤器可以把对资源的请求拦截下来，从而实现一些特殊的功能。</p>
+</li>
+<li><p>过滤器一般完成一些通用的操作，比如：权限控制、同意编码处理、敏感字符处理等等…</p>
+<p><img src="filter.jpg" alt="filter"></p>
+</li>
+</ul>
+<h3 id="Filter操作"><a href="#Filter操作" class="headerlink" title="Filter操作"></a>Filter操作</h3><ol>
+<li><p>定义类，实现Filter接口，并重写其他所有方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FilterDemo</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;&#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;&#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置Filter拦截资源的路径：在类上定义<code>@WebFilter</code>注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebFilter(&quot;/*&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FilterDemo</span> <span class="keyword">implements</span> <span class="title class_">Filter</span></span><br></pre></td></tr></table></figure></li>
+<li><p>在doFilter方法中输出一句话，并放行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;FilterDemo...&quot;</span>);</span><br><span class="line">      <span class="comment">//放行</span></span><br><span class="line">      filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Filter执行流程"><a href="#Filter执行流程" class="headerlink" title="Filter执行流程"></a>Filter执行流程</h3><p>执行放行前逻辑-&gt;放行-&gt;访问资源-&gt;执行放行后逻辑</p>
+<h3 id="Filter拦截路径配置"><a href="#Filter拦截路径配置" class="headerlink" title="Filter拦截路径配置"></a>Filter拦截路径配置</h3><ul>
+<li>Filter可以根据需求，配置不同的拦截资源路径<ul>
+<li>拦截具体的资源：/index.jsp：只有访问index.jsp时才会被拦截。</li>
+<li>目录拦截：/user/*：访问/user下的所有资源，都会被拦截</li>
+<li>后缀名拦截：*.jsp：访问后缀名为jsp的资源，都会被拦截</li>
+<li>拦截所有：/*:：访问所有资源，都会被拦截</li>
+</ul>
+</li>
+</ul>
+<h3 id="Filter过滤器链"><a href="#Filter过滤器链" class="headerlink" title="Filter过滤器链"></a>Filter过滤器链</h3><ul>
+<li>一个Web应用，可以配置多个过滤器，着多个过滤器成为过滤器链</li>
+<li>注解配置的Filter，优先级按照过滤器类名（字符串）的自然排序</li>
+</ul>
+<h3 id="Listener"><a href="#Listener" class="headerlink" title="Listener"></a>Listener</h3><ul>
+<li>监听器可以监听就是在application，session，request三个对象创建、销毁或者往其中添加修改删除属性时自动执行代码的功能组件</li>
+</ul>
+<h2 id="监听对象创建和销毁的监听器"><a href="#监听对象创建和销毁的监听器" class="headerlink" title="监听对象创建和销毁的监听器"></a>监听对象创建和销毁的监听器</h2><p>Servlet 规范定义了监听 ServletContext、HttpSession、HttpServletRequest 这三个对象创建和销毁事件的监听器，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>事件源</th>
+<th>监听器</th>
+<th>监听器描述</th>
+<th>创建和销毁方法</th>
+<th>调用时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ServletContext</td>
+<td>ServletContextListener</td>
+<td>用于监听 ServletContext 对象的创建与销毁过程</td>
+<td>void contextInitialized (ServletContextEvent sce)</td>
+<td>当创建 ServletContext 对象时</td>
+</tr>
+<tr>
+<td>void contextDestroyed (ServletContextEvent sce)</td>
+<td>当销毁 ServletContext 对象时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HttpSession</td>
+<td>HttpSessionListener</td>
+<td>用于监听 HttpSession 对象的创建和销毁过程</td>
+<td>void sessionCreated (HttpSessionEvent se)</td>
+<td>当创建 HttpSession 对象时</td>
+</tr>
+<tr>
+<td>void sessionDestroyed (HttpSessionEvent se)</td>
+<td>当销毁 HttpSession 对象时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ServletRequest</td>
+<td>ServletRequestListener</td>
+<td>用于监听 ServletRequest 对象的创建和销毁过程</td>
+<td>void requestInitialized (ServletRequestEvent sre)</td>
+<td>当创建 ServletRequest 对象时</td>
+</tr>
+<tr>
+<td>void requestDestroyed (ServletRequestEvent sre)</td>
+<td>当销毁 ServletRequest 对象时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="监听属性变更的监听器"><a href="#监听属性变更的监听器" class="headerlink" title="监听属性变更的监听器"></a>监听属性变更的监听器</h2><p>Servlet 规范定义了监听 ServletContext、HttpSession、HttpServletRequest 这三个对象中的属性变更事件的监听器，这三个监听器接口分别是 ServletContextAttributeListener、HttpSessionAttributeListener 和 ServletRequestAttributeListener。这三个接口中都定义了三个方法，用来处理被监听对象中属性的增加，删除和替换事件。同一种事件在这三个接口中对应的方法名称完全相同，只是参数类型不同，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>事件源</th>
+<th>监听器</th>
+<th>监听器描述</th>
+<th>方法</th>
+<th>调用时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ServletContext</td>
+<td>ServletContextAttributeListener</td>
+<td>用于监听 ServletContext 对象的属性新增、移除和替换</td>
+<td>public void attributeAdded (ServletContextAttributeEvent scae)</td>
+<td>当 ServletContext 对象中新增一个属性时</td>
+</tr>
+<tr>
+<td>public void attributeRemoved (ServletContextAttributeEvent scae)</td>
+<td>当删除 ServletContext 对象中的一个属性时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>public void attributeReplaced (ServletContextAttributeEvent scae)</td>
+<td>当 ServletContext 对象中的某个属性被替换时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HttpSession</td>
+<td>HttpSessionAttributeListener</td>
+<td>用于监听 HttpSession 对象的属性新增、移除和替换</td>
+<td>public void attributeAdded (HttpSessionBindingEvent hsbe)</td>
+<td>当 HttpSession 对象中新增一个属性时</td>
+</tr>
+<tr>
+<td>public void attributeRemoved (HttpSessionBindingEvent hsbe)</td>
+<td>当删除 HttpSession 对象中的一个属性时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>public void attributeReplaced (HttpSessionBindingEvent hsbe)</td>
+<td>当 HttpSession 对象中的某个属性被替换时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HttpServletRequest</td>
+<td>ServletRequestAttributeListener</td>
+<td>用于监听 HttpServletRequest 对象的属性新增、移除和替换</td>
+<td>public void attributeAdded (ServletRequestAttributeEvent srae)</td>
+<td>当 HttpServletRequest 对象中新增一个属性时</td>
+</tr>
+<tr>
+<td>public void attributeRemoved (ServletRequestAttributeEvent srae)</td>
+<td>当删除 HttpServletRequest 对象中的一个属性时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>public void attributeReplaced (ServletRequestAttributeEvent srae)</td>
+<td>当 HttpServletRequest 对象中的某个属性被替换时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="监听-Session-中对象状态改变的监听器"><a href="#监听-Session-中对象状态改变的监听器" class="headerlink" title="监听 Session 中对象状态改变的监听器"></a>监听 Session 中对象状态改变的监听器</h2><p> Session 中的对象可以有多种状态：绑定到 Session 中、从 Session 中解除绑定、随 Session 对象持久化到存储设备中(钝化)、随 Session 对象从存储设备中恢复（活化）。</p>
+<p>Servlet 规范中定义了两个特殊的监听器接口，用来帮助对象了解自己在 Session 中的状态：HttpSessionBindingListener 接口和 HttpSessionActivationListener 接口 ，实现这两个接口的类不需要进行注册。</p>
+<table>
+<thead>
+<tr>
+<th>事件源</th>
+<th>监听器</th>
+<th>监听器描述</th>
+<th>方法</th>
+<th>调用时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HttpSession</td>
+<td>HttpSessionBindingListener</td>
+<td>用于监听 JavaBean 对象绑定到 HttpSession 对象和从 HttpSession 对象解绑的事件</td>
+<td>void valueBound (HttpSessionBindingEvent event)</td>
+<td>当对象被绑定（添加）到 HttpSession 对象中时</td>
+</tr>
+<tr>
+<td>void valueUnbound (HttpSessionBindingEvent event)</td>
+<td>当对象从 HttpSession 对象中解除绑定（移除）时</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>HttpSessionActivationListener</td>
+<td>用于监听 HttpSession 中对象活化和钝化的过程</td>
+<td>void sessionWillPassivate (HttpSessionBindingEvent event)</td>
+<td>当绑定到 HttpSession 对象中的对象将要随 HttpSession 对象被钝化之前</td>
+<td></td>
+</tr>
+<tr>
+<td>void sessionDidActive (HttpSessionBindingEvent event)</td>
+<td>当绑定到 HttpSession 对象中的对象将要随 HttpSession 对象被活化之后</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Arno Dorian</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/11/09/5-Filter/">http://example.com/2022/11/09/5-Filter/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JAVA/"># JAVA</a>
+                    
+                        <a href="/tags/JavaWeb/"># JavaWeb</a>
+                    
+                        
+                </span>
+            </div>
+			
+			<!-- ******************************************************* -->
+			
+			<!-- 支持一下的按钮与图片 -->
+			
+			<div class="reward" id="reward">
+			
+			<div class="sponser">
+			
+			<div class="sponser_btn">支持一下</div>
+			
+			<div class="sponser_img">
+			
+			<div class="sponser_container">
+			
+			
+			
+			<div class="sponser_body">
+			
+
+			<div class="alipay">
+			
+			
+			
+			<div> 
+			
+			
+			<img class="sponser_alipay" src="/image/QR.jpg">
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			<!-- **************************************************** -->
+			
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/11/09/6-%E4%BC%9A%E8%AF%9D%E8%B7%9F%E8%B8%AA%E6%8A%80%E6%9C%AF/">6--会话跟踪技术</a>
+            
+            
+            <a class="next" rel="next" href="/2022/11/09/4-Request%E5%92%8CResponse/">4--Request和Response</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Arno Dorian | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+		 |
+		
+		 <!-- 访客数量 -->
+		
+		 
+		
+		 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<span class="site-uv">
+
+ 总访客量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+
+</span>&nbsp;
+
+
+
+
+
+<span class="site-pv">
+
+ | 总访问量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+
+</span>
+
+
+		
+		 
+
+		</span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
