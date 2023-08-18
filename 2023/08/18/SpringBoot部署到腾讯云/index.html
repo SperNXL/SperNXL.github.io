@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Arno Dorian">
+
+
+
+
+
+<title>SpringBoot部署到腾讯云 | Arno&#39;blogs</title>
+
+
+
+    <link rel="icon" href="/Cube.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./iconfont.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Arno&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Arno&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">SpringBoot部署到腾讯云</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Arno Dorian</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 18, 2023&nbsp;&nbsp;13:22:20</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/JAVA/">JAVA</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>此处默认已经申请到腾讯云服务器，因为本人还没有申请域名，所以就直接使用的<code>ip</code>地址</p>
+</blockquote>
+<h3 id="XShell连接到腾讯云"><a href="#XShell连接到腾讯云" class="headerlink" title="XShell连接到腾讯云"></a>XShell连接到腾讯云</h3><p>主机中填写腾讯云的公网ip地址</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818124415152.png" alt="image-20230818124415152"></p>
+<p>公网ip地址在下图中找到</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818124630811.png" alt="image-20230818124630811"></p>
+<p>接下来填写服务器的用户名与密码</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818124703497.png" alt="image-20230818124703497"></p>
+<p>一般<code>centOS</code>用户名为<code>root</code>，<code>ubuntu</code>的用户名为<code>ubuntu</code></p>
+<p>最后点击连接即可。</p>
+<h3 id="将java程序打包为jar"><a href="#将java程序打包为jar" class="headerlink" title="将java程序打包为jar"></a>将java程序打包为jar</h3><p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818125142698.png" alt="image-20230818125142698"></p>
+<p>如上图，点击<code>package</code>，就可以打包为<code>jar</code></p>
+<p>随后在在target中就可以找到<code>jar</code>，<code>target-&gt;xxx.jar</code>，如下图：</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818125213233.png" alt="image-20230818125213233"></p>
+<h3 id="将jar传输到服务器中"><a href="#将jar传输到服务器中" class="headerlink" title="将jar传输到服务器中"></a>将jar传输到服务器中</h3><p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818124942499.png" alt="image-20230818124942499"></p>
+<p>这里使用的是<code>xftp</code></p>
+<h3 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h3><p>项目使用的是<code>jdk1.8</code>，使用以下命令配置环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install java-1.8.0-openjdk*</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕后，使用以下命令查看是否安装成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h3><p>首先到<code>jar</code>包所在目录，本人jar包在<code>home</code>目录中</p>
+<p>随后执行以下目录执行java程序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxx.jar</span><br></pre></td></tr></table></figure>
+
+<p>完整命令如下图</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818125359550.png" alt="image-20230818125359550"></p>
+<h3 id="打开网站"><a href="#打开网站" class="headerlink" title="打开网站"></a>打开网站</h3><p><code>http://腾讯云服务器的公网ip:端口号</code>就可以使用了</p>
+<blockquote>
+<p>但是这样启动的话，当终端关闭，网站也打不开，那么就可以使用以下命令</p>
+<p><code>nohup java -jar xx.jar &gt; logName.log 2&gt;&amp;1 &amp;</code></p>
+<p><code>nohup</code>：不挂断地运行命令，退出帐户之后继续运行相应的进程。</p>
+<p>关闭则使用：</p>
+<p>1.<code>ps -ef | grep</code> (能识别你的进程名称的关键词)：会返回<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=nohup&spm=1001.2101.3001.7020">nohup</a>启动的所有相关进程</p>
+<p>2.<code>kill -9 pid</code>（pid为每一行的第二个id编码，表示的是该进程的父进程）</p>
+</blockquote>
+<h3 id="使用另外一种方法启动服务器"><a href="#使用另外一种方法启动服务器" class="headerlink" title="使用另外一种方法启动服务器"></a>使用另外一种方法启动服务器</h3><ol>
+<li><p>进入到<code>jar</code>包所在位置</p>
+</li>
+<li><p>建立启动停止文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch server.sh</span><br></pre></td></tr></table></figure></li>
+<li><p>打开文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim springboot.sh</span><br></pre></td></tr></table></figure></li>
+<li><p>按<code>i</code>进入编辑模式，粘贴下列代码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#这里可替换为你自己的执行程序，其他代码无需更改</span></span><br><span class="line">APP_NAME=zfile-4.1.5.jar</span><br><span class="line"> </span><br><span class="line"><span class="comment">#使用说明，用来提示输入参数</span></span><br><span class="line"><span class="function"><span class="title">usage</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Usage: sh 执行脚本.sh [start|stop|restart|status]&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#检查程序是否在运行</span></span><br><span class="line"><span class="function"><span class="title">is_exist</span></span>()&#123;</span><br><span class="line">  pid=`ps -ef|grep <span class="variable">$APP_NAME</span>|grep -v grep|awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> `</span><br><span class="line">  <span class="comment">#如果不存在返回1，存在返回0</span></span><br><span class="line">  <span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;pid&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">   <span class="built_in">return</span> 1</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">return</span> 0</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#启动方法</span></span><br><span class="line"><span class="function"><span class="title">start</span></span>()&#123;</span><br><span class="line">  is_exist</span><br><span class="line">  <span class="keyword">if</span> [ $? -eq <span class="string">&quot;0&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;APP_NAME&#125;</span> is already running. pid=<span class="variable">$&#123;pid&#125;</span> .&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">nohup</span> java -jar <span class="variable">$APP_NAME</span> &gt;&gt; catalina.out 2&gt;&amp;1 &amp;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;start OK,<span class="variable">$&#123;APP_NAME&#125;</span> is running&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#停止方法</span></span><br><span class="line"><span class="function"><span class="title">stop</span></span>()&#123;</span><br><span class="line">  is_exist</span><br><span class="line">  <span class="keyword">if</span> [ $? -eq <span class="string">&quot;0&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">kill</span> -9 <span class="variable">$pid</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;stop OK,<span class="variable">$&#123;APP_NAME&#125;</span> is NOT running.&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;APP_NAME&#125;</span> is not running&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#输出运行状态</span></span><br><span class="line"><span class="function"><span class="title">status</span></span>()&#123;</span><br><span class="line">  is_exist</span><br><span class="line">  <span class="keyword">if</span> [ $? -eq <span class="string">&quot;0&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;APP_NAME&#125;</span> is running. Pid is <span class="variable">$&#123;pid&#125;</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;APP_NAME&#125;</span> is NOT running.&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#重启</span></span><br><span class="line"><span class="function"><span class="title">restart</span></span>()&#123;</span><br><span class="line">  stop</span><br><span class="line">  start</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">#根据输入参数，选择执行对应方法，不输入则执行使用说明</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$1</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">  <span class="string">&quot;start&quot;</span>)</span><br><span class="line">    start</span><br><span class="line">    ;;</span><br><span class="line">  <span class="string">&quot;stop&quot;</span>)</span><br><span class="line">    stop</span><br><span class="line">    ;;</span><br><span class="line">  <span class="string">&quot;status&quot;</span>)</span><br><span class="line">    status</span><br><span class="line">    ;;</span><br><span class="line">  <span class="string">&quot;restart&quot;</span>)</span><br><span class="line">    restart</span><br><span class="line">    ;;</span><br><span class="line">  *)</span><br><span class="line">    usage</span><br><span class="line">    ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+
+<p>注意<code>APP_NAME</code>改为自己的<code>jar</code>包名称</p>
+<p>随后，先按<code>esc</code>在输入<code>:wq</code></p>
+</li>
+<li><p>将server.sh设置为可执行文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 770  server.sh</span><br></pre></td></tr></table></figure>
+
+<p>如果成功会变成绿色，如下图</p>
+<p><img src="http://picbedspernxl.oss-cn-chengdu.aliyuncs.com/img/image-20230818125637114.png" alt="image-20230818125637114"></p>
+</li>
+<li><p>启动与关闭</p>
+<p>启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh server.sh start</span><br></pre></td></tr></table></figure>
+
+<p>验证是否成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh server.sh status</span><br></pre></td></tr></table></figure>
+
+<p>关闭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh server.sh stop</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Arno Dorian</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/18/SpringBoot%E9%83%A8%E7%BD%B2%E5%88%B0%E8%85%BE%E8%AE%AF%E4%BA%91/">http://example.com/2023/08/18/SpringBoot%E9%83%A8%E7%BD%B2%E5%88%B0%E8%85%BE%E8%AE%AF%E4%BA%91/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JAVA/"># JAVA</a>
+                    
+                        
+                </span>
+            </div>
+			
+			<!-- ******************************************************* -->
+			
+			<!-- 支持一下的按钮与图片 -->
+			
+			<div class="reward" id="reward">
+			
+			<div class="sponser">
+			
+			<div class="sponser_btn">支持一下</div>
+			
+			<div class="sponser_img">
+			
+			<div class="sponser_container">
+			
+			
+			
+			<div class="sponser_body">
+			
+
+			<div class="alipay">
+			
+			
+			
+			<div> 
+			
+			
+			<img class="sponser_alipay" src="/image/QR.jpg">
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			</div>
+			
+			<!-- **************************************************** -->
+			
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2022/11/09/HTTP%E5%93%8D%E5%BA%94%E7%8A%B6%E6%80%81%E7%A0%81/">HTTP响应状态码</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Arno Dorian | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+		 |
+		
+		 <!-- 访客数量 -->
+		
+		 
+		
+		 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<span class="site-uv">
+
+ 总访客量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+
+</span>&nbsp;
+
+
+
+
+
+<span class="site-pv">
+
+ | 总访问量:
+
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+
+</span>
+
+
+		
+		 
+
+		</span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
